@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from torch.utils.data import Dataset
 import torch.optim as optim
 from DNN import DNN
-from data import CSVData
+from Data import CSVData
 from sklearn.model_selection import train_test_split
 
 class train_model:
@@ -20,12 +20,12 @@ class train_model:
         if test_data != None:
             inputs = []
             labels = []
-            for i in test_data.filenames:
+            for i in test_data.file_names:
                 X_test, Y_test = test_data.load_data(i)
                 inputs.append(X_test)
                 labels.append(Y_test)
-            test_inputs = F.normalize(torch.Tensor(inputs))
-            test_labels = torch.Tensor(labels)
+            test_inputs = F.normalize(torch.Tensor(np.array(inputs)))
+            test_labels = torch.Tensor(np.log(labels))
             del inputs, labels, X_test, Y_test
 
         for epoch in range(epochs):
@@ -36,8 +36,8 @@ class train_model:
             for i, batch in enumerate(train_data.generate_data()):
 
                 X, Y = batch
-                inputs = F.normalize(torch.Tensor(X))
-                labels = torch.Tensor(Y)
+                inputs = F.normalize(torch.Tensor(np.array(X)))
+                labels = torch.Tensor(np.log(Y))
                 del X, Y
 
                 outputs =net(inputs)
@@ -55,7 +55,7 @@ class train_model:
             losses.append(np.mean(epoch_loss))
             if test_data != None:
                 test_losses.append((train_model.Loss(test_labels, net(test_inputs)).item()))
-                
+
         print('Finished Training')
         return losses, test_losses
 
