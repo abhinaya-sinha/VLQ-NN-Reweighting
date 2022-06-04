@@ -6,55 +6,6 @@ from threading import Thread
 import itertools
 import torch
 
-class FilePreloader(Thread):
-    def __init__(self, files_list, file_open,n_ahead=2):
-        Thread.__init__(self)
-        self.deamon = True
-        self.n_concurrent = n_ahead
-        self.files_list = files_list
-        self.file_open = file_open
-        self.loaded = {} ## a dict of the loaded objects
-        self.should_stop = False
-        
-    def getFile(self, name):
-        ## locks until the file is loaded, then return the handle
-        return self.loaded.setdefault(name, self.file_open( name))
-
-    def closeFile(self,name):
-        ## close the file and
-        if name in self.loaded:
-            self.loaded.pop(name).close()
-    
-    def run(self):
-        while not self.files_list:
-            time.sleep(1)
-        for name in itertools.cycle(self.files_list):
-            if self.should_stop:
-                break
-            n_there = len(self.loaded.keys())
-            if n_there< self.n_concurrent:
-                print ("preloading",name,"with",n_there)
-                self.getFile( name )
-            else:
-                time.sleep(5)
-
-    def stop(self):
-        print("Stopping FilePreloader")
-        self.should_stop = True
-
-def data_class_getter(name):
-    """Returns the specified Data class"""
-    data_dict = {
-            "H5Data":H5Data,
-            "CSVData": CSVData
-            }
-    try:
-        return data_dict[name]
-    except KeyError:
-        print ("{0:s} is not a known Data class. Returning None...".format(name))
-        return None
-
-
 class Data(object):
     """Class providing an interface to the input training data.
         Derived classes should implement the load_data function.
@@ -71,37 +22,6 @@ class Data(object):
         self.batch_size = batch_size
         self.caching_directory = cache if cache else os.environ.get('GANINMEM','')
         self.spectators = spectators
-        self.fpl = None
-
-    def set_caching_directory(self, cache):
-        self.caching_directory = cache
-        
-    def set_file_names(self, file_names):
-        ## hook to copy data in /dev/shm
-        relocated = []
-        if self.caching_directory:
-            goes_to = self.caching_directory
-            goes_to += str(os.getpid())
-            os.system('mkdir %s '%goes_to)
-            os.system('rm %s/* -f'%goes_to) ## clean first if anything
-            for fn in file_names:
-                relocate = goes_to+'/'+fn.split('/')[-1]
-                if not os.path.isfile( relocate ):
-                    print ("copying %s to %s"%( fn , relocate))
-                    if os.system('cp %s %s'%( fn ,relocate))==0:
-                        relocated.append( relocate )
-                    else:
-                        print ("was enable to copy the file",fn,"to",relocate)
-                        relocated.append( fn ) ## use the initial one
-                else:
-                    relocated.append( relocate )
-                        
-            self.file_names = relocated
-        else:
-            self.file_names = file_names
-            
-        if self.fpl:
-            self.fpl.files_list = self.file_names
                 
     def generate_data(self):
        """Yields batches of training data until none are left."""
@@ -190,30 +110,16 @@ class CSVData(Data):
         self.features_name = features_name
         self.labels_name = labels_name        
         self.spectators_name = spectators_name
-        self.file_names = file_names
-        ## initialize the data-preloader
-        self.fpl = None
-        if preloading:
-            self.fpl = FilePreloader( file_names, file_open = lambda n :self.load_data(n), n_ahead=preloading)
-            self.fpl.start()          
+        self.file_names = file_names 
     def load_data(self, in_file_name):
         """Loads numpy arrays (or list of numpy arrays) from csv file.
         """
-        if self.fpl:
-            csv_file = self.fpl.getFile( in_file_name )
-        else:
-            csv_file = pd.read_csv(in_file_name)
+        csv_file = pd.read_csv(in_file_name)
         X = csv_file[self.features_name].to_numpy()
         Y = csv_file[self.labels_name].to_numpy()
         if self.spectators_name is not None:
             Z = csv_file[self.spectators_name].to_numpy()
-        if self.fpl:
-            self.fpl.closeFile( in_file_name )
         if self.spectators_name is not None:
             return X,Y, Z
         else:
             return X,Y
-
-    def finalize(self):
-        if self.fpl:
-            self.fpl.stop()
