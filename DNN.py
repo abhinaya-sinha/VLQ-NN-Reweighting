@@ -21,11 +21,11 @@ class DNN(nn.Module):
             net.add_module("Linear" + str(ii), this_module)
             net.add_module("Activation" + str(ii), self.activation)
         last_module = nn.Linear(self.Layers[-2], 1, True)
+        nn.init.xavier_normal_(last_module.weight)
         net.add_module("Linear_last", last_module)
-        last_activation = nn.ReLU()
+        last_activation = nn.LeakyReLU()
         net.add_module("Activation_last", last_activation)
         return net 
     
     def forward(self, X):
-        X = ((X-self.X_mean)/self.X_std).t(self.device)
         return self.Model.forward(X)

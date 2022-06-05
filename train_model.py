@@ -16,7 +16,7 @@ class train_model:
     def train(train_data, net, optimizer, test_data = None, epochs = 300):
         losses =[]
         test_losses = []
-
+        
         if test_data != None:
             inputs = []
             labels = []
@@ -24,7 +24,7 @@ class train_model:
                 X_test, Y_test = test_data.load_data(i)
                 inputs.append(X_test)
                 labels.append(Y_test)
-            test_inputs = F.normalize(torch.Tensor(np.array(inputs)))
+            test_inputs = torch.Tensor(np.array(inputs))
             test_labels = torch.Tensor(np.log(labels))
             del inputs, labels, X_test, Y_test
 
@@ -36,10 +36,10 @@ class train_model:
             for i, batch in enumerate(train_data.generate_data()):
 
                 X, Y = batch
-                inputs = F.normalize(torch.Tensor(np.array(X)))
-                labels = torch.Tensor(np.log(Y))
+                inputs = torch.Tensor(np.array(X))
+                labels = torch.Tensor(np.log(np.array(Y)))
                 del X, Y
-
+                
                 outputs =net(inputs)
                 optimizer.zero_grad()
                 loss = train_model.Loss(labels, outputs)
@@ -52,7 +52,7 @@ class train_model:
                     print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.3f}')
                     running_loss = 0.0
             print('Epoch ' + str(epoch+1) +': ' + str(loss.item()))
-            losses.append(np.mean(epoch_loss))
+            losses.append(loss.item())
             if test_data != None:
                 test_losses.append((train_model.Loss(test_labels, net(test_inputs)).item()))
 
