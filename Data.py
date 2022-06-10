@@ -104,17 +104,19 @@ class Data(object):
 
 class CSVData(Data):
 
-    def __init__(self, batch_size, cache=None, preloading=False, features_name='features', labels_name='labels', spectators_name = None, file_names=[]):
+    def __init__(self, batch_size, cache=None, preloading=False, features_name='features', features_to_rescale= [], labels_name='labels', spectators_name = None, file_names=[]):
         """Initializes and stores names of feature and label datasets"""
         super(CSVData, self).__init__(batch_size,cache,(spectators_name is not None))
         self.features_name = features_name
         self.labels_name = labels_name        
         self.spectators_name = spectators_name
         self.file_names = file_names 
+        self.features_to_rescale=features_to_rescale
     def load_data(self, in_file_name):
         """Loads numpy arrays (or list of numpy arrays) from csv file.
         """
         csv_file = pd.read_csv(in_file_name)
+        csv_file[self.features_to_rescale].divide(1000)
         X = csv_file[self.features_name].to_numpy()
         Y = csv_file[self.labels_name].to_numpy()
         if self.spectators_name is not None:
