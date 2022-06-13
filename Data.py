@@ -125,3 +125,16 @@ class CSVData(Data):
             return X,Y, Z
         else:
             return X,Y
+    def load_data_many(self):
+        """Loads numpy arrays (or list of numpy arrays) from several csv files.
+        """
+        csv_file = pd.concat(pd.read_csv(file) for file in self.file_names)
+        csv_file[self.features_to_rescale].divide(1000)
+        X = csv_file[self.features_name].to_numpy()
+        Y = csv_file[self.labels_name].to_numpy()
+        if self.spectators_name is not None:
+            Z = csv_file[self.spectators_name].to_numpy()
+        if self.spectators_name is not None:
+            return X,Y, Z
+        else:
+            return X,Y
