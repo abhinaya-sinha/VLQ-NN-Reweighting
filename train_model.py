@@ -22,8 +22,8 @@ class train_model:
         
         if test_data != None:
             X_test, Y_test = test_data.load_data_many()
-            test_inputs = torch.Tensor(X_test)
-            test_labels = torch.Tensor(Y_test)
+            test_inputs = torch.Tensor(np.array(X_test))
+            test_labels = torch.Tensor(np.array(Y_test))
             del X_test, Y_test
 
         for epoch in range(epochs):
@@ -32,12 +32,11 @@ class train_model:
             total_test_losses=[]
             running_loss = 0.0
 
-            for i, batch in enumerate(train_data.generate_data()):
+            for X, Y in train_data.generate_data():
 
-                X, Y = batch
                 inputs = torch.Tensor(np.array(X))
                 labels = torch.Tensor(np.log(np.array(Y)))
-                del X, Y, batch
+                del X, Y
                 
                 outputs =net(inputs)
                 optimizer.zero_grad()
@@ -51,15 +50,12 @@ class train_model:
                 del loss
                 
                 if test_data != None:
-                    indexes = [np.random.randint(0, test_labels.size(0)) for i in range(0, 1024)]
-                    test_input_subsection = test_inputs[indexes]
-                    test_out=net(test_input_subsection)
-                    total_test_losses.append((train_model.Loss(test_labels[indexes], test_out).item()))
-                    del test_out, test_input_subsection, indexes
-                
-                if i % 2000 == 1999:
-                    print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.3f}')
-                    running_loss = 0.0
+                    with torch.no_grad():
+                        indexes = [np.random.randint(0, test_labels.size(0)) for i in range(0, 1024)]
+                        test_input_subsection = test_inputs[indexes]
+                        test_out=net(test_input_subsection)
+                        total_test_losses.append((train_model.Loss(test_labels[indexes], test_out).item()))
+                        del test_out, test_input_subsection, indexes
                     
             loss = np.mean(epoch_loss)
             print('Epoch ' + str(epoch+1) +': ' + str(loss))
