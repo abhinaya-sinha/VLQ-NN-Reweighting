@@ -62,7 +62,7 @@ net = DNN(Layers=[23,32, 64, 16, 8]).build_model()
 optimizer = optim.Adam(net.parameters(), lr=1e-3)
 epochs=150
 
-losses, test_losses = train_model.train(train_data=VLQData, test_data = test_data, net = net, optimizer=optimizer, epochs=epochs)
+losses, test_losses, accuracies = train_model.train(train_data=VLQData, test_data = test_data, net = net, optimizer=optimizer, epochs=epochs)
 
 model_scripted = torch.jit.script(net)
 model_scripted.save('trained_models/model_scripted4.pt')
@@ -74,3 +74,10 @@ plt.yscale('log')
 plt.legend()
 plt.savefig('plot4.png')
 plt.show()
+plt.close()
+
+plt.plot(np.linspace(0,epochs,epochs), accuracies*100)
+plt.title('test accuracy')
+plt.savefig('accuracy1.png')
+plt.show()
+plt.close()

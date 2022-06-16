@@ -10,11 +10,8 @@ from Data import CSVData
 
 class train_model:
     def Loss(y, y_pred, delta=0.5): #MSE loss
-        a = torch.mean(torch.abs(y - y_pred))
-        if a <= delta:
-            return 0.5*a**2
-        else:
-            return delta*(a-0.5*delta)
+        loss_function = nn.HuberLoss(delta=0.5)
+        return loss_function(y,y_pred)
 
     def train(train_data, net, optimizer, test_data = None, epochs = 300):
         losses =[]
@@ -25,13 +22,13 @@ class train_model:
             test_inputs = torch.Tensor(np.array(X_test))
             test_labels = torch.Tensor(np.array(Y_test))
             del X_test, Y_test
+            accuracies = []
 
         for epoch in range(epochs):
 
             epoch_loss = []
             total_test_losses=[]
             running_loss = 0.0
-
             for X, Y in train_data.generate_data():
 
                 inputs = torch.Tensor(np.array(X))
@@ -44,8 +41,6 @@ class train_model:
                 loss.backward()
                 optimizer.step()
                 del outputs, inputs, labels
-
-                running_loss += loss.item()
                 epoch_loss.append(loss.item())
                 del loss
                 
@@ -55,6 +50,7 @@ class train_model:
                         test_input_subsection = test_inputs[indexes]
                         test_out=net(test_input_subsection)
                         total_test_losses.append((train_model.Loss(test_labels[indexes], test_out).item()))
+                        accuracies.append(np.mean(torch.abs(test_out-test_labels[indexes])))
                         del test_out, test_input_subsection, indexes
                     
             loss = np.mean(epoch_loss)
@@ -67,4 +63,4 @@ class train_model:
                 del total_test_losses
                 
         print('Finished Training')
-        return losses, test_losses
+        return losses, test_losses, accuracies
