@@ -10,8 +10,12 @@ from Data import CSVData
 from sklearn.model_selection import train_test_split
 
 class train_model:
-    def Loss(y, y_pred): #MSE loss
-        return torch.mean(((y - y_pred)/y)**2)
+    def Loss(y, y_pred, delta=0.5): #MSE loss
+        a = torch.mean(torch.abs(y - y_pred))
+        if a <= delta:
+            return 0.5*a**2
+        else:
+            return delta*(a-0.5*delta)
 
     def train(train_data, net, optimizer, test_data = None, epochs = 300):
         losses =[]
@@ -58,51 +62,3 @@ class train_model:
 
         print('Finished Training')
         return losses, test_losses
-
-if __name__ == "__main__":
-    features = ['pz_in1', 
-    'pid_in1', 
-    'pid_in2', 
-    'px_out1',
-    'py_out1',
-    'pz_out1',
-    'e_out1',
-    'pid_out1',
-    'px_out2',
-    'py_out2',
-    'pz_out2',
-    'e_out2',
-    'pid_out2',
-    'px_out3',
-    'py_out3',
-    'pz_out3',
-    'e_out3',
-    'pid_out3',
-    'px_out4',
-    'py_out4',
-    'pz_out4',
-    'e_out4',
-    'pid_out4',
-    'Mtarget',
-    'Gtarget',]
-    label = 'f_rwt'
-
-    VLQData = CSVData(batch_size=1024, features_name=features, labels_name=label, file_names=['./train_'+str(i)+'.csv' for i in range(0,10)])
-
-    net = DNN(device = 'cuda').build_model()
-    optimizer = optim.Adam(net.parameters(), lr=0.01, weight_decay=0.01)
-    epochs =200
-
-    losses, test_losses = train_model.train(train_data=VLQData, net = net, optimizer=optimizer, epochs=epochs)
-
-    torch.save(net, 'first_model.pt')
-
-
-    fig = plt.figure()
-    ax = fig.add_subplot(1,1,1)
-    ax.plot(np.linspace(0, epochs, epochs), losses, label = 'train loss')
-    ax.plot(np.linspace(0,epochs, epochs), test_losses, label = 'test loss')
-    ax.set_yscale('log')
-    ax.legend()
-    fig.savefig('plot.png')
-    plt.show(block=True)
