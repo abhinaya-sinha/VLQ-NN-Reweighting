@@ -11,7 +11,7 @@ from Data import CSVData
 class train_model:
     def Loss(y, y_pred, delta=0.5): #MSE loss
         loss_function = nn.HuberLoss(delta=0.5)
-        return loss_function(y_pred.view(y.size(dim=0)), y)
+        return loss_function(y_pred.view(y.size()), y)
 
     def train(train_data, net, optimizer, test_data = None, epochs = 300):
         losses =[]
@@ -20,7 +20,7 @@ class train_model:
         if test_data != None:
             X_test, Y_test = test_data.load_data_many()
             test_inputs = torch.Tensor(np.array(X_test))
-            test_labels = torch.Tensor(np.array(Y_test))
+            test_labels = torch.Tensor(np.array(np.log(Y_test)))
             del X_test, Y_test
             accuracies = []
 
@@ -28,6 +28,7 @@ class train_model:
 
             epoch_loss = []
             total_test_losses=[]
+            epoch_accuracies = []
             running_loss = 0.0
             for X, Y in train_data.generate_data():
 
@@ -50,7 +51,7 @@ class train_model:
                         test_input_subsection = test_inputs[indexes]
                         test_out=net(test_input_subsection)
                         total_test_losses.append((train_model.Loss(test_labels[indexes], test_out).item()))
-                        accuracies.append(torch.mean(torch.abs(test_out-test_labels[indexes])).item())
+                        epoch_accuracies.append(1-torch.mean(torch.abs((test_out-test_labels[indexes])/test_out)).item())
                         del test_out, test_input_subsection, indexes
                     
             loss = np.mean(epoch_loss)
@@ -60,7 +61,8 @@ class train_model:
             
             if test_data != None:
                 test_losses.append(np.mean(total_test_losses))
-                del total_test_losses
+                accuracies.append(np.mean(epoch_accuracies))
+                del total_test_losses, epoch_accuracies
                 
         print('Finished Training')
         return losses, test_losses, accuracies

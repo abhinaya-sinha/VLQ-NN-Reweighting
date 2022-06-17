@@ -76,7 +76,7 @@ plt.savefig('plot4.png')
 plt.show()
 plt.close()
 
-plt.plot(np.linspace(0,epochs,epochs), accuracies*100)
+plt.plot(np.linspace(0,epochs,epochs), accuracies)
 plt.title('test accuracy')
 plt.savefig('accuracy1.png')
 plt.show()
