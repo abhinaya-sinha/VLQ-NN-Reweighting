@@ -62,10 +62,10 @@ features_to_rescale = ['Msim',
 'e_out4',
 'Mtarget',
 'Gtarget']
-VLQData = CSVData(batch_size=2048, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/train_'+str(i)+'.csv' for i in range(0,10)]).to(device)
-test_data = CSVData(batch_size=1024, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/test_' + str(i) + '.csv' for i in range(0,5)]).to(device)
+VLQData = CSVData(batch_size=2048, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/train_'+str(i)+'.csv' for i in range(0,10)])
+test_data = CSVData(batch_size=1024, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/test_' + str(i) + '.csv' for i in range(0,5)])
 
-net = nn.DataParallel(DNN(Layers=[23,32, 64, 16, 8], device=device).build_model())
+net = torch.nn.DataParallel(DNN(Layers=[23,32, 64, 16, 8], device=device).Model)
 optimizer = optim.Adam(net.parameters(), lr=1e-3)
 epochs=150
 
