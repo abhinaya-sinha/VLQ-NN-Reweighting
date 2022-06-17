@@ -13,14 +13,14 @@ class train_model:
         loss_function = nn.HuberLoss(delta=0.5)
         return loss_function(y_pred.view(y.size()), y)
 
-    def train(train_data, net, optimizer, test_data = None, epochs = 300):
+    def train(train_data, net, optimizer, test_data = None, epochs = 300, device='cpu'):
         losses =[]
         test_losses = []
         
         if test_data != None:
             X_test, Y_test = test_data.load_data_many()
-            test_inputs = torch.Tensor(np.array(X_test))
-            test_labels = torch.Tensor(np.array(np.log(Y_test)))
+            test_inputs = torch.Tensor(np.array(X_test)).to(device)
+            test_labels = torch.Tensor(np.array(np.log(Y_test))).to(device)
             del X_test, Y_test
             accuracies = []
 
@@ -32,8 +32,8 @@ class train_model:
             running_loss = 0.0
             for X, Y in train_data.generate_data():
 
-                inputs = torch.Tensor(np.array(X))
-                labels = torch.Tensor(np.log(np.array(Y)))
+                inputs = torch.Tensor(np.array(X)).to(device)
+                labels = torch.Tensor(np.log(np.array(Y))).to(device)
                 del X, Y
                 
                 outputs =net(inputs)
@@ -48,8 +48,8 @@ class train_model:
                 if test_data != None:
                     with torch.no_grad():
                         indexes = [np.random.randint(0, test_labels.size(0)) for i in range(0, 1024)]
-                        test_input_subsection = test_inputs[indexes]
-                        test_out=net(test_input_subsection)
+                        test_input_subsection = test_inputs[indexes].to(device)
+                        test_out=net(test_input_subsection).to(device)
                         total_test_losses.append((train_model.Loss(test_labels[indexes], test_out).item()))
                         epoch_accuracies.append(1-torch.mean(torch.abs((test_out-test_labels[indexes])/test_out)).item())
                         del test_out, test_input_subsection, indexes

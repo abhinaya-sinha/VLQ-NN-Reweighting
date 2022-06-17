@@ -9,6 +9,13 @@ from Data import CSVData
 from train_model import train_model
 from DNN import DNN
 
+if torch.cuda.is_available():
+	device = torch.device("cuda") 
+else:
+	device = torch.device("cpu")
+	raise Exception("GPU not found")
+
+
 features = ['mode',
 'Msim',
 'Gsim',
@@ -55,14 +62,14 @@ features_to_rescale = ['Msim',
 'e_out4',
 'Mtarget',
 'Gtarget']
-VLQData = CSVData(batch_size=2048, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/train_'+str(i)+'.csv' for i in range(0,10)])
-test_data = CSVData(batch_size=1024, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/test_' + str(i) + '.csv' for i in range(0,5)])
+VLQData = CSVData(batch_size=2048, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/train_'+str(i)+'.csv' for i in range(0,10)]).to(device)
+test_data = CSVData(batch_size=1024, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/test_' + str(i) + '.csv' for i in range(0,5)]).to(device)
 
-net = DNN(Layers=[23,32, 64, 16, 8]).build_model()
+net = nn.DataParallel(DNN(Layers=[23,32, 64, 16, 8], device=device).build_model())
 optimizer = optim.Adam(net.parameters(), lr=1e-3)
 epochs=150
 
-losses, test_losses, accuracies = train_model.train(train_data=VLQData, test_data = test_data, net = net, optimizer=optimizer, epochs=epochs)
+losses, test_losses, accuracies = train_model.train(train_data=VLQData, test_data = test_data, net = net, optimizer=optimizer, epochs=epochs, device=device)
 
 model_scripted = torch.jit.script(net)
 model_scripted.save('trained_models/model_scripted4.pt')

@@ -113,6 +113,12 @@ class CSVData(Data):
         self.file_names = file_names 
         self.features_to_rescale=features_to_rescale
     def load_data(self, in_file_name):
+	if torch.cuda.is_available():
+    		device = torch.device("cuda")
+    		print("Running on the GPU")
+	else:
+    		device = torch.device("cpu")
+    		print("Running on the CPU")
         """Loads numpy arrays (or list of numpy arrays) from csv file.
         """
         csv_file = pd.read_csv(in_file_name)
