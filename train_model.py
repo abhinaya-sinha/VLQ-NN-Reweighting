@@ -11,7 +11,7 @@ from Data import CSVData
 class train_model:
     def Loss(y, y_pred, delta=0.5): #MSE loss
         loss_function = nn.HuberLoss(delta=0.5)
-        return loss_function(y,y_pred)
+        return loss_function(y_pred.view(y.size(dim=0)), y)
 
     def train(train_data, net, optimizer, test_data = None, epochs = 300):
         losses =[]
@@ -50,7 +50,7 @@ class train_model:
                         test_input_subsection = test_inputs[indexes]
                         test_out=net(test_input_subsection)
                         total_test_losses.append((train_model.Loss(test_labels[indexes], test_out).item()))
-                        accuracies.append(np.mean(torch.abs(test_out-test_labels[indexes])))
+                        accuracies.append(torch.mean(torch.abs(test_out-test_labels[indexes])).item())
                         del test_out, test_input_subsection, indexes
                     
             loss = np.mean(epoch_loss)
