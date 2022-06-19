@@ -13,7 +13,7 @@ class train_model:
         loss_function = nn.HuberLoss(delta=0.5)
         return loss_function(y_pred.view(y.size()), y)
 
-    def train(train_data, net, optimizer, test_data = None, epochs = 300, device='cpu'):
+    def train(train_data, net, optimizer, test_data = None, epochs = 300, device='cuda'):
         losses =[]
         test_losses = []
         
@@ -27,8 +27,6 @@ class train_model:
         for epoch in range(epochs):
 
             epoch_loss = []
-            total_test_losses=[]
-            epoch_accuracies = []
             running_loss = 0.0
             for X, Y in train_data.generate_data():
 
@@ -44,15 +42,6 @@ class train_model:
                 del outputs, inputs, labels
                 epoch_loss.append(loss.item())
                 del loss
-                
-                if test_data != None:
-                    with torch.no_grad():
-                        indexes = [np.random.randint(0, test_labels.size(0)) for i in range(0, 1024)]
-                        test_input_subsection = test_inputs[indexes].to(device)
-                        test_out=net(test_input_subsection).to(device)
-                        total_test_losses.append((train_model.Loss(test_labels[indexes], test_out).item()))
-                        epoch_accuracies.append(1-torch.mean(torch.abs((test_out-test_labels[indexes])/test_out)).item())
-                        del test_out, test_input_subsection, indexes
                     
             loss = np.mean(epoch_loss)
             print('Epoch ' + str(epoch+1) +': ' + str(loss))
@@ -60,9 +49,11 @@ class train_model:
             del loss, epoch_loss
             
             if test_data != None:
-                test_losses.append(np.mean(total_test_losses))
-                accuracies.append(np.mean(epoch_accuracies))
-                del total_test_losses, epoch_accuracies
-                
+                with torch.no_grad():
+                    test_out=torch.reshape(net(test_inputs), (test_labels.size(dim=0),)).to(device)
+                    test_losses.append((train_model.Loss(test_labels, test_out).item()))
+                    accuracies.append(1-torch.mean(torch.abs((test_labels-test_out)/test_labels)).item())
+                    del test_out
+
         print('Finished Training')
         return losses, test_losses, accuracies

@@ -2,12 +2,13 @@ import torch
 import torch.nn as nn
 
 class DNN(nn.Module):
-    def __init__(self, Layers=[25, 16], activation = nn.LeakyReLU(), X_mean = 0, X_std = 1, device = 'cuda'):
+    def __init__(self, Layers=[25, 16], activation = nn.LeakyReLU(), X_mean = 0, X_std = 1, device = 'cpu'):
         super().__init__()
         self.Layers = Layers
         self.activation = activation
         self.device = device
         self.activation = activation
+        self.device = device
         self.Model = self.build_model().to(device)
         self.X_mean = X_mean 
         self.X_std = X_std

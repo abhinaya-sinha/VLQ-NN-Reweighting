@@ -65,21 +65,21 @@ features_to_rescale = ['Msim',
 VLQData = CSVData(batch_size=2048, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/train_'+str(i)+'.csv' for i in range(0,10)])
 test_data = CSVData(batch_size=1024, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/test_' + str(i) + '.csv' for i in range(0,5)])
 
-net = torch.nn.DataParallel(DNN(Layers=[23,32, 64, 16, 8], device=device).Model)
+net = DNN(Layers=[23,32, 64, 16, 8], device=device).Model
 optimizer = optim.Adam(net.parameters(), lr=1e-3)
-epochs=150
+epochs=200
 
 losses, test_losses, accuracies = train_model.train(train_data=VLQData, test_data = test_data, net = net, optimizer=optimizer, epochs=epochs, device=device)
 
 model_scripted = torch.jit.script(net)
-model_scripted.save('trained_models/model_scripted4.pt')
+model_scripted.save('trained_models/model_scripted5.pt')
 
 plt.plot(np.linspace(0,epochs, epochs), losses, label = 'train loss')
 plt.yscale('log')
 plt.plot(np.linspace(0, epochs, epochs), test_losses, label = 'test loss')
 plt.yscale('log')
 plt.legend()
-plt.savefig('plot4.png')
+plt.savefig('plot5.png')
 plt.show()
 plt.close()
 
