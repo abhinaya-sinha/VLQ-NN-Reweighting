@@ -7,31 +7,38 @@ from torch import optim
 import Data
 from Data import CSVData
 
-model_path = '/projects/bbhj/asinha15/VLQ-NN-Reweighting/trained_models/model_scripted4.pt'
+model_path = '/projects/bbhj/asinha15/VLQ-NN-Reweighting/trained_models/model_scripted5.pt'
 model = torch.jit.load(model_path)
 model.eval()
 
 features = ['mode',
 'Msim',
 'Gsim',
-'pz_in1', 
+'weight',
+'pz_in1',
+'pid_in1', 
 'pz_in2',
+'pid_in2',
 'px_out1',
 'py_out1',
 'pz_out1',
 'e_out1',
+'pid_out1',
 'px_out2',
 'py_out2',
 'pz_out2',
 'e_out2',
+'pid_out2',
 'px_out3',
 'py_out3',
 'pz_out3',
 'e_out3',
+'pid_out3',
 'px_out4',
 'py_out4',
 'pz_out4',
 'e_out4',
+'pid_out4',
 'Mtarget',
 'Gtarget',]
 label = 'f_rwt'
