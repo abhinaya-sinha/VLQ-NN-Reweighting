@@ -7,8 +7,13 @@ from torch import optim
 import Data
 from Data import CSVData
 
+if torch.cuda.is_available():
+    device = 'cuda'
+else:
+    device = 'cpu'
+
 model_path = '/raid/projects/asinha15/VLQ-NN-Reweighting/trained_models/model_scripted6.pt'
-model = torch.jit.load(model_path)
+model = torch.jit.load(model_path).to(device)
 model.eval()
 
 features = ['mode',
@@ -69,13 +74,13 @@ train_data = CSVData(batch_size=1024, features_name=features, labels_name=label,
 test_data = CSVData(batch_size=1024, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/raid/projects/asinha15/test_' + str(i)+'.csv' for i in range(0,10)])
 
 X, Y = train_data.load_data_many()
-train_inputs = torch.Tensor(np.array(X))
-train_labels = torch.Tensor(np.log(np.array(Y)))
+train_inputs = torch.Tensor(np.array(X)).to(device)
+train_labels = torch.Tensor(np.log(np.array(Y))).to(device)
 del X, Y
 
 X, Y = test_data.load_data_many()
-test_inputs = torch.Tensor(np.array(X))
-test_labels = torch.Tensor(np.log(np.array(Y)))
+test_inputs = torch.Tensor(np.array(X)).to(device)
+test_labels = torch.Tensor(np.log(np.array(Y))).to(device)
 del X, Y
 
 with torch.no_grad():
