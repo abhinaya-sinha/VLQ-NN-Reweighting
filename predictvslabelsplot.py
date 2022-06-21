@@ -65,8 +65,8 @@ features_to_rescale = ['Msim',
 'Mtarget',
 'Gtarget']
 
-train_data = CSVData(batch_size=1024, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/train_' + str(i)+'.csv' for i in range(0,10)])
-test_data = CSVData(batch_size=1024, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/test_' + str(i)+'.csv' for i in range(0,10)])
+train_data = CSVData(batch_size=1024, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/raid/projects/asinha15/train_' + str(i)+'.csv' for i in range(0,10)])
+test_data = CSVData(batch_size=1024, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/raid/projects/asinha15/test_' + str(i)+'.csv' for i in range(0,10)])
 
 X, Y = train_data.load_data_many()
 train_inputs = torch.Tensor(np.array(X))
