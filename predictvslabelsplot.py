@@ -7,7 +7,7 @@ from torch import optim
 import Data
 from Data import CSVData
 
-model_path = '/projects/bbhj/asinha15/VLQ-NN-Reweighting/trained_models/model_scripted5.pt'
+model_path = '/raid/projects/asinha15/VLQ-NN-Reweighting/trained_models/model_scripted6.pt'
 model = torch.jit.load(model_path)
 model.eval()
 
