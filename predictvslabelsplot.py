@@ -84,11 +84,11 @@ test_labels = torch.Tensor(np.log(np.array(Y))).to(device)
 del X, Y
 
 with torch.no_grad():
-    train_out=torch.reshape(model(train_inputs), [9000000])
-    test_out=torch.reshape(model(test_inputs), [1500000])
+    train_out=torch.reshape(model(train_inputs), [9000000]).to('cpu')
+    test_out=torch.reshape(model(test_inputs), [1500000]).to('cpu')
 
-plt.scatter(train_labels, train_out, s=0.5, alpha=0.5, label='train data')
-plt.scatter(test_labels, test_out, s=0.5, alpha=0.5, label='test data')
+plt.scatter(train_labels.to('cpu'), train_out, s=0.5, alpha=0.5, label='train data')
+plt.scatter(test_labels.to('cpu'), test_out, s=0.5, alpha=0.5, label='test data')
 plt.xlabel('labels')
 plt.ylabel('predicted')
 plt.legend()
