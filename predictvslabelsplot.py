@@ -12,7 +12,7 @@ if torch.cuda.is_available():
 else:
     device = 'cpu'
 
-model_path = '/raid/projects/asinha15/VLQ-NN-Reweighting/trained_models/model_scripted6.pt'
+model_path = '/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/trained_models/model_scripted6.pt'
 model = torch.jit.load(model_path).to(device)
 model.eval()
 
