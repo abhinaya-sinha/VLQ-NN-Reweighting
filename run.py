@@ -79,7 +79,7 @@ epochs=200
 losses, test_losses, accuracies = train_model.train(train_data=VLQData, test_data = test_data, net = net, optimizer=optimizer, epochs=epochs, device=device)
 
 model_scripted = torch.jit.script(net)
-model_scripted.save('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/trained_models/model_scripted6.pt')
+model_scripted.save('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/trained_models/model_scripted7.pt')
 
 plt.plot(np.linspace(0,epochs, epochs), losses, label = 'train loss')
 plt.yscale('log')
@@ -92,6 +92,6 @@ plt.close()
 
 plt.plot(np.linspace(0,epochs,epochs), accuracies)
 plt.title('test accuracy')
-plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/plots/accuracy6.png')
+plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/plots/accuracy7.png')
 plt.show()
 plt.close()

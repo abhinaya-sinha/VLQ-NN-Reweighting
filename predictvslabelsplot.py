@@ -12,7 +12,7 @@ if torch.cuda.is_available():
 else:
     device = 'cpu'
 
-model_path = '/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/trained_models/model_scripted6.pt'
+model_path = '/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/trained_models/model_scripted7.pt'
 model = torch.jit.load(model_path).to(device)
 model.eval()
 
@@ -92,5 +92,5 @@ plt.scatter(test_labels.to('cpu'), test_out, s=0.5, alpha=0.5, label='test data'
 plt.xlabel('labels')
 plt.ylabel('predicted')
 plt.legend()
-plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/plots/predictedvslabels2.png')
+plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/plots/predictedvslabels3.png')
 plt.show()
