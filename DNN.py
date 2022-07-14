@@ -23,8 +23,8 @@ class DNN(nn.Module):
         last_module = nn.Linear(self.Layers[-2], 1, True)
         nn.init.xavier_normal_(last_module.weight)
         net.add_module("Linear_last", last_module)
-        last_activation = nn.LeakyReLU()
-        net.add_module("Activation_last", last_activation)
+        #last_activation = nn.LeakyReLU()
+        #net.add_module("Activation_last", last_activation)
         return net 
     
     def forward(self, X):
