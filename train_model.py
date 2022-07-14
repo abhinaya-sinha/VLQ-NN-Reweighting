@@ -13,15 +13,22 @@ class train_model:
         loss_function = nn.HuberLoss(delta=0.5)
         return loss_function(y_pred.view(y.size()), y)
 
-    def train(train_data, net, optimizer, test_data = None, epochs = 300, device='cuda'):
+    def train(train_data, net, optimizer, test_data = None, val_data = None, epochs = 300, device='cuda'):
         losses =[]
         test_losses = []
+        val_losses = []
         
         if test_data != None:
             X_test, Y_test = test_data.load_data_many()
             test_inputs = torch.Tensor(np.array(X_test)).to(device)
             test_labels = torch.Tensor(np.array(np.log(Y_test))).to(device)
             del X_test, Y_test
+        
+        if val_data != None:
+            X_val, Y_val = val_data.load_data_many()
+            val_inputs = torch.Tensor(np.array(X_val)).to(device)
+            val_labels = torch.Tensor(np.array(np.log(Y_val))).to(device)
+            del X_val, Y_val
             accuracies = []
 
         for epoch in range(epochs):
@@ -52,8 +59,14 @@ class train_model:
                 with torch.no_grad():
                     test_out=torch.reshape(net(test_inputs), (test_labels.size(dim=0),)).to(device)
                     test_losses.append((train_model.Loss(test_labels, test_out).item()))
-                    accuracies.append(1-torch.mean(torch.abs((test_labels-test_out)/test_labels)).item())
                     del test_out
+            
+            if val_data != None:
+                with torch.no_grad():
+                    val_out=torch.reshape(net(val_inputs), (val_labels.size(dim=0),)).to(device)
+                    val_losses.append((train_model.Loss(val_labels, val_out).item()))
+                    accuracies.append(1-torch.mean(torch.abs((val_labels-val_out)/val_labels)).item())
+                    del val_out
 
         print('Finished Training')
-        return losses, test_losses, accuracies
+        return losses, test_losses, val_losses, accuracies
