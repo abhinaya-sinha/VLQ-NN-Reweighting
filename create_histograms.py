@@ -100,24 +100,25 @@ Mtargetuniq=toGraph['Mtarget'].unique()
 Gsimuniq = toGraph['Gsim'].unique()
 Gtargetuniq=toGraph['Gtarget'].unique()
 for Msim in Msimuniq:
-    Msimidx = set(toGraph.index[toGraph['Msim']==Msim])
-    for Gsim in Gsimuniq:
-        Gsimidx = set(toGraph.index[toGraph['Gsim']==Gsim])
-        for Mtarget in Mtargetuniq:
-            Mtargetidx = set(toGraph.index[toGraph['Mtarget']==Mtarget])
-            for Gtarget in Gtargetuniq:
-                Gtargetidx = set(toGraph.index[toGraph['Gtarget']==Gtarget])
-                idx = list(Msimidx & Gsimidx & Mtargetidx & Msimidx)
+    # Msimidx = set(toGraph.index[toGraph['Msim']==Msim])
+    # for Gsim in Gsimuniq:
+    for Gsim in [Msim*0.25, Msim*0.5]:
+        # Gsimidx = set(toGraph.index[toGraph['Gsim']==Gsim])
+        # for Mtarget in Mtargetuniq:
+        for Mtarget in list(range(int(Msim)-200, int(Msim)+250, 100)):
+            # Mtargetidx = set(toGraph.index[toGraph['Mtarget']==Mtarget])
+            # for Gtarget in Gtargetuniq:
+            for Gtarget in [Msim*x for x in np.arange(0.05, 0.53, 0.05)]:
+                # Gtargetidx = set(toGraph.index[toGraph['Gtarget']==Gtarget])
+                # idx = list(Msimidx & Gsimidx & Mtargetidx & Msimidx)
+                idxlocs = (toGraph['Msim'] == Msim) & (toGraph['Gsim'] == Gsim) & (toGraph['Mtarget'] == Mtarget) & (toGraph['Gtarget'] == Gtarget)
+                idx = list(set(toGraph.index[idxlocs])) # this line may need some tweaking
                 if idx:
                     plt.hist([toGraph.at[i,'Mvlq'] for i in idx], bins = 60, weights = [toGraph.at[i,'actual f_rwt'] for i in idx], label = 'MadGraph', alpha=1)
                     plt.hist([toGraph.at[i,'Mvlq'] for i in idx], bins = 60, weights = [toGraph.at[i, 'predicted f_rwt'] for i in idx], label = 'DNN', alpha=0.75)
                     plt.xlabel('Mvlq')
                     plt.legend()
-                    title = 'M' + str(int(Msim/100)) + 'G' + str(int(Gsim*100/Msim) if Gsim*100/Msim >=100 else ('0' + str(int(Gsim*100/Msim)) if Gsim*100/Msim >= 10 else '00' + str(int(Gsim*100/Msim)))) + '(s)' + ' M' + (str(int(Mtarget/100)) if Mtarget/100 >= 10 else '0'+str(int(Mtarget/100))) + 'G' + str(int(Gtarget*100/Mtarget) if Gtarget*100/Mtarget >= 100 else ('0' + str(int(Gtarget*100/Mtarget)) if Gtarget*100/Mtarget >= 10 else '00' + str(int(Gtarget*100/Mtarget)))) + '(r)'
+                    title = 'M{0:02d}G{1:03d}(s) M{2:02d}G{3:03d}(r)'.format(int(Msim/100), int(Gsim*100/Msim), int(Mtarget/100), int(Gtarget*100/Mtarget))
                     plt.title(title)
                     plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/histograms/' + title.replace(' ', '') + '.png')
                     plt.close()
-                del idx
-            del Mtargetidx
-        del Gsimidx
-    del Msimidx
