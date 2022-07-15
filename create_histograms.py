@@ -116,6 +116,8 @@ for Msim in Msimuniq:
                 title = 'M' + str(int(Msim/100)) + 'G' + str(int(Gsim*100/Msim) if Gsim*100/Msim >=100 else ('0' + str(int(Gsim*100/Msim)) if Gsim*100/Msim >= 10 else '00' + str(int(Gsim*100/Msim)))) + '(s)' + ' M' + str(int(Mtarget/100)) + 'G' + str(int(Gtarget*100/Mtarget) if Gtarget*100/Mtarget >= 100 else ('0' + str(int(Gtarget*100/Mtarget)) if Gtarget*100/Mtarget >= 10 else '00' + str(int(Gtarget*100/Mtarget)))) + '(r)'
                 plt.title(title)
                 plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/histograms/' + title.replace(' ', '') + '.png')
+                plt.get_legend().remove()
+                plt.close()
                 del idx
             del Mtargetidx
         del Gsimidx
