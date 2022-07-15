@@ -108,14 +108,15 @@ for Msim in Msimuniq:
             for Gtarget in Gtargetuniq:
                 Gtargetidx = set(toGraph.index[toGraph['Gtarget']==Gtarget])
                 idx = list(Msimidx & Gsimidx & Mtargetidx & Msimidx)
-                plt.hist([toGraph.at[i,'Mvlq'] for i in idx], bins = 60, weights = [toGraph.at[i,'actual f_rwt'] for i in idx], label = 'MadGraph', alpha=1)
-                plt.hist([toGraph.at[i,'Mvlq'] for i in idx], bins = 60, weights = [toGraph.at[i, 'predicted f_rwt'] for i in idx], label = 'DNN', alpha=0.75)
-                plt.xlabel('Mvlq')
-                plt.legend()
-                title = 'M' + str(int(Msim/100)) + 'G' + str(int(Gsim*100/Msim) if Gsim*100/Msim >=100 else ('0' + str(int(Gsim*100/Msim)) if Gsim*100/Msim >= 10 else '00' + str(int(Gsim*100/Msim)))) + '(s)' + ' M' + (str(int(Mtarget/100)) if Mtarget/100 >= 10 else '0'+str(int(Mtarget/100))) + 'G' + str(int(Gtarget*100/Mtarget) if Gtarget*100/Mtarget >= 100 else ('0' + str(int(Gtarget*100/Mtarget)) if Gtarget*100/Mtarget >= 10 else '00' + str(int(Gtarget*100/Mtarget)))) + '(r)'
-                plt.title(title)
-                plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/histograms/' + title.replace(' ', '') + '.png')
-                plt.close()
+                if idx:
+                    plt.hist([toGraph.at[i,'Mvlq'] for i in idx], bins = 60, weights = [toGraph.at[i,'actual f_rwt'] for i in idx], label = 'MadGraph', alpha=1)
+                    plt.hist([toGraph.at[i,'Mvlq'] for i in idx], bins = 60, weights = [toGraph.at[i, 'predicted f_rwt'] for i in idx], label = 'DNN', alpha=0.75)
+                    plt.xlabel('Mvlq')
+                    plt.legend()
+                    title = 'M' + str(int(Msim/100)) + 'G' + str(int(Gsim*100/Msim) if Gsim*100/Msim >=100 else ('0' + str(int(Gsim*100/Msim)) if Gsim*100/Msim >= 10 else '00' + str(int(Gsim*100/Msim)))) + '(s)' + ' M' + (str(int(Mtarget/100)) if Mtarget/100 >= 10 else '0'+str(int(Mtarget/100))) + 'G' + str(int(Gtarget*100/Mtarget) if Gtarget*100/Mtarget >= 100 else ('0' + str(int(Gtarget*100/Mtarget)) if Gtarget*100/Mtarget >= 10 else '00' + str(int(Gtarget*100/Mtarget)))) + '(r)'
+                    plt.title(title)
+                    plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/histograms/' + title.replace(' ', '') + '.png')
+                    plt.close()
                 del idx
             del Mtargetidx
         del Gsimidx
