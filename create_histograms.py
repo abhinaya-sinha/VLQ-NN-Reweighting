@@ -109,7 +109,7 @@ for Msim in Msimuniq:
             #Mtargetidx = [i for i in Gsimidx if (i in Mtargetidx)]
             for j, Gtarget in enumerate(Gtargetuniq):
                 idx = toGraph.index[toGraph['Gtarget']==Gtarget]
-                idx = [i for i in idx if (i in Mtargetidx)]
+                idx = [i for i in idx if (i in Mtargetidx and i in Gsimidx)]
                 plt.hist(toGraph['Mvlq', idx].values, bins = 60, weights = toGraph['actual f_rwt'], label = 'MadGraph', alpha=1)
                 plt.hist(toGraph['Mvlq', idx].values, bins = 60, weights = toGraph['predicted f_rwt'], label = 'DNN', alpha=0.75)
                 plt.xlabel('Mvlq')
