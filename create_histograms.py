@@ -100,18 +100,16 @@ Mtargetuniq=toGraph['Mtarget'].unique()
 Gsimuniq = toGraph['Gsim'].unique()
 Gtargetuniq=toGraph['Gtarget'].unique()
 for Msim in Msimuniq:
-    Msimidx = toGraph.index[toGraph['Msim']==Msim]
+    Msimidx = set(toGraph.index[toGraph['Msim']==Msim])
     for Gsim in Gsimuniq:
-        Gsimidx = toGraph.index[toGraph['Gsim']==Gsim]
-        Gsimidx = [i for i in Gsimidx if (i in Msimidx)]
+        Gsimidx = set(toGraph.index[toGraph['Gsim']==Gsim])
         for Mtarget in Mtargetuniq:
-            Mtargetidx = toGraph.index[toGraph['Mtarget']==Mtarget]
-            #Mtargetidx = [i for i in Gsimidx if (i in Mtargetidx)]
-            for j, Gtarget in enumerate(Gtargetuniq):
-                idx = toGraph.index[toGraph['Gtarget']==Gtarget]
-                idx = [i for i in idx if (i in Mtargetidx and i in Gsimidx)]
-                plt.hist(toGraph['Mvlq', idx].values, bins = 60, weights = toGraph['actual f_rwt'], label = 'MadGraph', alpha=1)
-                plt.hist(toGraph['Mvlq', idx].values, bins = 60, weights = toGraph['predicted f_rwt'], label = 'DNN', alpha=0.75)
+            Mtargetidx = set(toGraph.index[toGraph['Mtarget']==Mtarget])
+            for Gtarget in Gtargetuniq:
+                Gtargetidx = set(toGraph.index[toGraph['Gtarget']==Gtarget])
+                idx = list(Msimidx & Gsimidx & Mtargetidx & Msimidx)
+                plt.hist([toGraph.at[i,'Mvlq'] for i in idx], bins = 60, weights = [toGraph.at[i,'actual f_rwt'] for i in idx], label = 'MadGraph', alpha=1)
+                plt.hist([toGraph.at[i,'Mvlq'] for i in idx], bins = 60, weights = [toGraph.at[i, 'predicted f_rwt'] for i in idx], label = 'DNN', alpha=0.75)
                 plt.xlabel('Mvlq')
                 plt.legend()
                 title = 'M' + str(int(Msim/100)) + 'G' + str(int(Gsim*100/Msim) if Gsim*100/Msim >=100 else ('0' + str(int(Gsim*100/Msim)) if Gsim*100/Msim >= 10 else '00' + str(int(Gsim*100/Msim)))) + '(s)' + ' M' + (str(int(Mtarget/100)) if Mtarget/100 >= 10 else '0'+str(int(Mtarget/100))) + 'G' + str(int(Gtarget*100/Mtarget) if Gtarget*100/Mtarget >= 100 else ('0' + str(int(Gtarget*100/Mtarget)) if Gtarget*100/Mtarget >= 10 else '00' + str(int(Gtarget*100/Mtarget)))) + '(r)'
