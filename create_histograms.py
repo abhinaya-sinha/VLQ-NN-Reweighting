@@ -102,13 +102,13 @@ Gtargetuniq=toGraph['Gtarget'].unique()
 for Msim in Msimuniq:
     for Gsim in [Msim*0.25, Msim*0.5]:
         for Mtarget in list(range(int(Msim)-200, int(Msim)+250, 100)):
-            for Gtarget in [Msim*x for x in np.arange(0.05, 0.53, 0.05)]:
+            for Gtarget in [Mtarget*x for x in np.arange(0.05, 0.53, 0.05)]:
                 for mode in [-1,0,1]:
                     idxlocs = (toGraph['Msim'] == Msim) & (toGraph['Gsim'] == Gsim) & (toGraph['Mtarget'] == Mtarget) & (toGraph['Gtarget'] == Gtarget) & (toGraph['mode']==mode)
                     idx = list(set(toGraph.index[idxlocs])) # this line may need some tweaking
                     if idx:
-                        plt.hist([toGraph.at[i,'Mvlq'] for i in idx], bins = 60, weights = [toGraph.at[i,'actual f_rwt'] for i in idx], label = 'MadGraph', alpha=1)
-                        plt.hist([toGraph.at[i,'Mvlq'] for i in idx], bins = 60, weights = [toGraph.at[i, 'predicted f_rwt'] for i in idx], label = 'DNN', alpha=0.75)
+                        plt.hist([toGraph.at[i,'Mvlq'] for i in idx], bins = 30, weights = [toGraph.at[i,'actual f_rwt'] for i in idx], label = 'MadGraph', alpha=1)
+                        plt.hist([toGraph.at[i,'Mvlq'] for i in idx], bins = 30, weights = [toGraph.at[i, 'predicted f_rwt'] for i in idx], label = 'DNN', alpha=0.75)
                         plt.xlabel('Mvlq')
                         plt.legend()
                         title = 'M{0:02d}G{1:03d}(s) M{2:02d}G{3:03d}(r)'.format(int(Msim/100), int(Gsim*100/Msim), int(Mtarget/100), int(Gtarget*100/Mtarget))
