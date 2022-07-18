@@ -9,11 +9,11 @@ from DNN import DNN
 from Data import CSVData
 
 class train_model:
-    def Loss(y, y_pred, delta=0.5): #MSE loss
-        loss_function = nn.HuberLoss(delta=0.5)
+    def Loss(y, y_pred, loss):
+        loss_function = loss
         return loss_function(y_pred.view(y.size()), y)
 
-    def train(train_data, net, optimizer, test_data = None, val_data = None, epochs = 300, device='cuda'):
+    def train(train_data, net, optimizer, test_data = None, val_data = None, epochs = 300, loss = nn.HuberLoss(delta=0.5), device='cuda'):
         losses =[]
         test_losses = []
         val_losses = []
@@ -43,7 +43,7 @@ class train_model:
                 
                 outputs =net(inputs)
                 optimizer.zero_grad()
-                loss = train_model.Loss(labels, outputs)
+                loss = train_model.Loss(labels, outputs, loss)
                 loss.backward()
                 optimizer.step()
                 del outputs, inputs, labels
@@ -58,13 +58,13 @@ class train_model:
             if test_data != None:
                 with torch.no_grad():
                     test_out=torch.reshape(net(test_inputs), (test_labels.size(dim=0),)).to(device)
-                    test_losses.append((train_model.Loss(test_labels, test_out).item()))
+                    test_losses.append((train_model.Loss(test_labels, test_out, loss).item()))
                     del test_out
             
             if val_data != None:
                 with torch.no_grad():
                     val_out=torch.reshape(net(val_inputs), (val_labels.size(dim=0),)).to(device)
-                    val_losses.append((train_model.Loss(val_labels, val_out).item()))
+                    val_losses.append((train_model.Loss(val_labels, val_out, loss).item()))
                     accuracies.append(1-torch.mean(torch.abs((val_labels-val_out)/val_labels)).item())
                     del val_out
 
