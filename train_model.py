@@ -40,7 +40,7 @@ class train_model:
                 
                 outputs =net(inputs)
                 optimizer.zero_grad()
-                loss = loss_fn(torch.reshape(outputs, (labels.size(dim=0))), labels)
+                loss = loss_fn(torch.reshape(outputs, (labels.size(dim=0),)), labels)
                 loss.backward()
                 optimizer.step()
                 del outputs, inputs, labels
