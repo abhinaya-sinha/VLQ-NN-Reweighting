@@ -69,15 +69,15 @@ features_to_rescale = ['Msim',
 'Mtarget',
 'Gtarget']
 
-train_data = CSVData(batch_size=1024, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/train_' + str(i)+'.csv' for i in range(0,10)])
+test_data = CSVData(batch_size=1024, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/test_' + str(i)+'.csv' for i in range(0,10)])
 
-X, Y = train_data.load_data_many()
+X, Y = test_data.load_data_many()
 inputs = torch.Tensor(np.array(X)).to(device)
 labels = torch.Tensor(np.log(np.array(Y))).to(device)
 del X, Y
 
 with torch.no_grad():
-    out=torch.reshape(model(inputs), [9000000]).to('cpu')
+    out=torch.reshape(model(inputs), [1500000]).to('cpu')
 
 df = pd.DataFrame(inputs.to('cpu'))
 df.columns = features
@@ -113,5 +113,5 @@ for Msim in Msimuniq:
                         plt.legend()
                         title = 'M{0:02d}G{1:03d}(s) M{2:02d}G{3:03d}(r)'.format(int(Msim/100), int(Gsim*100/Msim), int(Mtarget/100), int(Gtarget*100/Mtarget))
                         plt.title(title)
-                        plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/histograms/mode' + str(mode) + '/' + title.replace(' ', '') + '.png')
+                        plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/histograms/test_data/mode' + str(mode) + '/' + title.replace(' ', '') + '.png')
                         plt.close()
