@@ -10,7 +10,7 @@ from Data import CSVData
 
 class train_model:
     def Loss(y, y_pred, loss_fn):
-        return loss_fn(y_pred.view(y.size()), y)
+        return loss_fn(y_pred, y)
 
     def train(train_data, net, optimizer, test_data = None, val_data = None, epochs = 300, loss_fn = nn.HuberLoss(delta=0.5), device='cuda'):
         losses =[]
