@@ -80,7 +80,7 @@ loss_functions = [nn.MSELoss, nn.HuberLoss(delta=0.5)]
 loss_functions_names = ['MSE Loss', 'Huber Loss']
 
 for loss, loss_function_name in loss_functions, loss_functions_names:
-    losses, test_losses, val_losses, accuracies = train_model.train(train_data=VLQData, test_data = test_data, val_data = val_data, net = net, optimizer=optimizer, epochs=epochs, device=device)
+    losses, test_losses, val_losses, accuracies = train_model.train(train_data=VLQData, test_data = test_data, val_data = val_data, net = net, optimizer=optimizer, epochs=epochs, device=device, loss_fn=loss)
 
     model_scripted = torch.jit.script(net)
     model_scripted.save('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/trained_models/'+ loss_functions_names+'1.pt')
