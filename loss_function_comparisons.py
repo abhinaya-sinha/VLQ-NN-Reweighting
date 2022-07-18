@@ -76,7 +76,7 @@ val_data = CSVData(batch_size=2048, features_name=features, labels_name=label, f
 net = DNN(Layers=[30, 32, 64, 16, 8, 4], device=device).Model
 optimizer = optim.Adam(net.parameters(), lr=1e-3)
 epochs=200
-loss_functions = [nn.MSELoss, nn.HuberLoss(delta=0.5)]
+loss_functions = [nn.MSELoss(), nn.HuberLoss(delta=0.5)]
 loss_functions_names = ['MSE Loss', 'Huber Loss']
 
 for loss, loss_function_name in loss_functions, loss_functions_names:
