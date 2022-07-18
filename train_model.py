@@ -60,7 +60,7 @@ class train_model:
             
             if val_data != None:
                 with torch.no_grad():
-                    val_out=torch.reshape(net(val_inputs), (val_labels.size(dim=0))).to(device)
+                    val_out=torch.reshape(net(val_inputs), (val_labels.size(dim=0),)).to(device)
                     val_losses.append(loss_fn(val_out, val_labels).item())
                     accuracies.append(1-torch.mean(torch.abs((val_labels-val_out)/val_labels)).item())
                     del val_out
