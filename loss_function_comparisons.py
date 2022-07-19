@@ -83,7 +83,7 @@ for loss, loss_function_name in loss_functions, loss_functions_names:
     losses, test_losses, val_losses, accuracies = train_model.train(train_data=VLQData, test_data = test_data, val_data = val_data, net = net, optimizer=optimizer, epochs=epochs, device=device, loss_fn=loss)
 
     model_scripted = torch.jit.script(net)
-    model_scripted.save('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/trained_models/'+ loss_function_name+'1.pt')
+    model_scripted.save('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/trained_models/'+ str(loss_function_name)+'1.pt')
 
     plt.plot(np.linspace(0,epochs, epochs), losses, label = 'train loss')
     plt.yscale('log')
@@ -92,12 +92,12 @@ for loss, loss_function_name in loss_functions, loss_functions_names:
     plt.plot(np.linspace(0, epochs, epochs), val_losses, label = 'validation loss')
     plt.yscale('log')
     plt.legend()
-    plt.savefig('plots/LossFunctionPlots/'+loss_function_name + '.png')
+    plt.savefig('plots/LossFunctionPlots/'+str(loss_function_name) + '.png')
     plt.show()
     plt.close()
     plt.plot(np.linspace(0,epochs,epochs), accuracies)
     plt.xticks([0,10,20,30,40,50,60,70,80,85,90,92,94,96,98,100])
     plt.title('1-relative absolute error')
-    plt.savefig('plots/RAE/'+loss_function_name + '1.png')
+    plt.savefig('plots/RAE/'+str(loss_function_name) + '1.png')
     plt.show()
     plt.close()
