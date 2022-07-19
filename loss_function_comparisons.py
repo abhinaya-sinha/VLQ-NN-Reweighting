@@ -75,15 +75,15 @@ val_data = CSVData(batch_size=2048, features_name=features, labels_name=label, f
 
 net = DNN(Layers=[30, 32, 64, 16, 8, 4], device=device).Model
 optimizer = optim.Adam(net.parameters(), lr=1e-3)
-epochs=200
-loss_functions = [nn.MSELoss(), nn.HuberLoss(delta=0.5)]
-loss_functions_names = ['MSE Loss', 'Huber Loss']
+epochs=400
+loss_functions = [nn.HuberLoss(delta=0.5)]
+loss_functions_names = ['Huber Loss']
 
-for loss, loss_function_name in loss_functions, loss_functions_names:
+for i, loss in enumerate(loss_functions):
     losses, test_losses, val_losses, accuracies = train_model.train(train_data=VLQData, test_data = test_data, val_data = val_data, net = net, optimizer=optimizer, epochs=epochs, device=device, loss_fn=loss)
 
     model_scripted = torch.jit.script(net)
-    model_scripted.save('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/trained_models/'+ str(loss_function_name)+'1.pt')
+    model_scripted.save('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/trained_models/'+ str(loss_functions_names[i])+'2.pt')
 
     plt.plot(np.linspace(0,epochs, epochs), losses, label = 'train loss')
     plt.yscale('log')
@@ -92,12 +92,12 @@ for loss, loss_function_name in loss_functions, loss_functions_names:
     plt.plot(np.linspace(0, epochs, epochs), val_losses, label = 'validation loss')
     plt.yscale('log')
     plt.legend()
-    plt.savefig('plots/LossFunctionPlots/'+str(loss_function_name) + '.png')
+    plt.savefig('plots/LossFunctionPlots/'+str(loss_functions_names[i]) + '.png')
     plt.show()
     plt.close()
     plt.plot(np.linspace(0,epochs,epochs), accuracies)
-    plt.xticks([0,10,20,30,40,50,60,70,80,85,90,92,94,96,98,100])
+    plt.yticks([0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.85,0.90,0.92,0.94,0.96,0.98,0.100], fontsize=1)
     plt.title('1-relative absolute error')
-    plt.savefig('plots/RAE/'+str(loss_function_name) + '1.png')
+    plt.savefig('plots/RAE/'+str(loss_functions_names[i]) + '2.png')
     plt.show()
     plt.close()
