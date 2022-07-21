@@ -68,7 +68,9 @@ class train_model:
             if epoch > 200:
                 if val_data != None:
                     if val_losses[epoch] > np.mean([val_losses[i] for i in range(epoch-10, epoch)]):
-                        break
+                        net = torch.load('nettemp.png')
+                else:
+                    torch.save(net, 'nettemp.png')
 
         print('Finished Training')
         return losses, test_losses, val_losses, accuracies
