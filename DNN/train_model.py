@@ -64,6 +64,9 @@ class train_model:
                     val_losses.append(loss_fn(val_out, val_labels).item())
                     accuracies.append(1-torch.mean(torch.abs((val_labels-val_out)/val_labels)).item())
                     del val_out
+            
+            if val_losses[epoch] > np.min([val_losses[i] for i in range(epoch-5, epoch)]):
+                break
 
         print('Finished Training')
         return losses, test_losses, val_losses, accuracies

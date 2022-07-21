@@ -70,17 +70,17 @@ features_to_rescale = ['Msim',
 'Mtarget',
 'Gtarget']
 VLQData = CSVData(batch_size=2048, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/train_'+str(i)+'.csv' for i in range(0,8)])
-test_data = CSVData(batch_size=1024, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/test_' + str(i) + '.csv' for i in range(0,10) if i%2==0])
+test_data = CSVData(batch_size=1024, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/test_' + str(i) + '.csv' for i in range(0,10)])
 val_data = CSVData(batch_size=2048, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/train_'+str(i)+'.csv' for i in range(8,10)])
 
-net = DNN(Layers=[30, 32, 64, 16, 8], device=device).Model
+net = DNN(Layers=[30, 32, 64, 32, 16, 8, 4], device=device).Model
 optimizer = optim.Adam(net.parameters(), lr=1e-3)
-epochs=200
+epochs=300
 
 losses, test_losses, val_losses, accuracies = train_model.train(train_data=VLQData, test_data = test_data, val_data = val_data, net = net, optimizer=optimizer, epochs=epochs, device=device)
 
 model_scripted = torch.jit.script(net)
-model_scripted.save('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/trained_models/model_scripted8.pt')
+model_scripted.save('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/trained_models/[30, 32, 64, 32, 16, 8, 4].pt')
 
 plt.plot(np.linspace(0,epochs, epochs), losses, label = 'train loss')
 plt.yscale('log')
@@ -89,12 +89,12 @@ plt.yscale('log')
 plt.plot(np.linspace(0, epochs, epochs), val_losses, label = 'validation loss')
 plt.yscale('log')
 plt.legend()
-plt.savefig('plots/plot8.png')
+plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/plots/LossFunctionPlots/[30, 32, 64, 32, 16, 8, 4].png')
 plt.show()
 plt.close()
 
 plt.plot(np.linspace(0,epochs,epochs), accuracies)
 plt.title('validation accuracy')
-plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/plots/accuracy8.png')
+plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/plots/RAE/[30, 32, 64, 32, 16, 8, 4].png')
 plt.show()
 plt.close()
