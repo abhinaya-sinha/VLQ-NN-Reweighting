@@ -65,9 +65,9 @@ class train_model:
                     accuracies.append(1-torch.mean(torch.abs((val_labels-val_out)/val_labels)).item())
                     del val_out
             
-            if epoch > 50:
+            if epoch > 200:
                 if val_data != None:
-                    if val_losses[epoch] > np.min([val_losses[i] for i in range(epoch-5, epoch)]):
+                    if val_losses[epoch] > np.mean([val_losses[i] for i in range(epoch-10, epoch)]):
                         break
 
         print('Finished Training')
