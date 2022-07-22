@@ -132,7 +132,10 @@ class CSVData(Data):
         csv_file = pd.concat(pd.read_csv(file) for file in self.file_names)
         csv_file[self.features_to_rescale].divide(1000)
         Y = csv_file[self.labels_name].to_numpy()/(csv_file['weight'].to_numpy())
-        self.features_name.remove('weight')
+        try:
+            self.features_name.remove('weight')
+        except:
+            pass
         X = csv_file[self.features_name].to_numpy()
         if self.spectators_name is not None:
             Z = csv_file[self.spectators_name].to_numpy()
