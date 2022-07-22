@@ -67,14 +67,14 @@ class train_model:
                     del val_out
             
             if epoch == 200:
-                torch.save(net, '/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/nettemp.png')
+                torch.save(net, '/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/nettemp.pt')
             if epoch > 200:
                 if val_data != None:
                     if val_losses[epoch] > np.mean([val_losses[i] for i in range(epoch-10, epoch)]):
-                        net = torch.load('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/nettemp.png')
+                        net = torch.load('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/nettemp.pt')
                 else:
-                    torch.save(net, '/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/nettemp.png')
+                    torch.save(net, '/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/nettemp.pt')
 
-        os.remove('nettemp.png')
+        os.remove('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/nettemp.pt')
         print('Finished Training')
         return losses, test_losses, val_losses, accuracies
