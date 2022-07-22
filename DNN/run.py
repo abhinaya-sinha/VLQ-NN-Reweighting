@@ -75,7 +75,7 @@ val_data = CSVData(batch_size=2048, features_name=features, labels_name=label, f
 
 net = DNN(Layers=[30, 32, 64, 32, 32, 16, 8, 4], device=device).Model
 optimizer = optim.Adam(net.parameters(), lr=1e-3)
-epochs=400
+epochs=300
 
 losses, test_losses, val_losses, accuracies = train_model.train(train_data=VLQData, test_data = test_data, val_data = val_data, net = net, optimizer=optimizer, epochs=epochs, device=device)
 
