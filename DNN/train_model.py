@@ -7,6 +7,7 @@ from torch.utils.data import Dataset
 import torch.optim as optim
 from DNN import DNN
 from Data import CSVData
+import os
 
 class train_model:
 
@@ -65,12 +66,15 @@ class train_model:
                     accuracies.append(1-torch.mean(torch.abs((val_labels-val_out)/val_labels)).item())
                     del val_out
             
+            if epoch == 200:
+                torch.save(net, '/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/nettemp.png')
             if epoch > 200:
                 if val_data != None:
                     if val_losses[epoch] > np.mean([val_losses[i] for i in range(epoch-10, epoch)]):
-                        net = torch.load('nettemp.png')
+                        net = torch.load('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/nettemp.png')
                 else:
-                    torch.save(net, 'nettemp.png')
+                    torch.save(net, '/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/nettemp.png')
 
+        os.remove('nettemp.png')
         print('Finished Training')
         return losses, test_losses, val_losses, accuracies
