@@ -80,7 +80,7 @@ epochs=300
 losses, test_losses, val_losses, accuracies = train_model.train(train_data=VLQData, test_data = test_data, val_data = val_data, net = net, optimizer=optimizer, epochs=epochs, device=device)
 
 model_scripted = torch.jit.script(net)
-model_scripted.save('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/trained_models/[30, 32, 64, 32, 32, 16, 8, 4].pt')
+model_scripted.save('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/trained_models/[30, 32, 64, 32, 32, 16, 8, 4] 2.pt')
 
 plt.plot(np.linspace(0,len(losses), len(losses)), losses, label = 'train loss')
 plt.yscale('log')
@@ -89,12 +89,12 @@ plt.yscale('log')
 plt.plot(np.linspace(0, len(losses), len(losses)), val_losses, label = 'validation loss')
 plt.yscale('log')
 plt.legend()
-plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/plots/LossFunctionPlots/[30, 32, 64, 32, 32, 16, 8, 4].png')
+plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/plots/LossFunctionPlots/[30, 32, 64, 32, 32, 16, 8, 4] 2.png')
 plt.show()
 plt.close()
 
 plt.plot(np.linspace(0,len(losses),len(losses)), accuracies)
 plt.title('validation accuracy')
-plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/plots/RAE/[30, 32, 64, 64, 32, 16, 8, 4].png')
+plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/plots/RAE/[30, 32, 64, 64, 32, 16, 8, 4] 2.png')
 plt.show()
 plt.close()
