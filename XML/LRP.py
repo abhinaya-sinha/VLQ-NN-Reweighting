@@ -1,3 +1,4 @@
+import numpy as np
 def LRP(model, rho, incr, X, Y):
 
     W = []
