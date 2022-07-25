@@ -1,4 +1,4 @@
-def LRP(model, rho, incr, Y):
+def LRP(model, rho, incr, X, Y):
 
     W = []
     B = []
