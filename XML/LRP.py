@@ -26,4 +26,5 @@ def LRP(model, rho, incr, X, Y):
         c = w.dot(s.transpose()).transpose()     # step 3
         R[l] = A[l]*c                            # step 4
 
+    del A, W, B
     return R
