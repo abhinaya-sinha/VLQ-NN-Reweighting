@@ -73,14 +73,14 @@ VLQData = CSVData(batch_size=2048, features_name=features, labels_name=label, fe
 test_data = CSVData(batch_size=1024, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/test_' + str(i) + '.csv' for i in range(0,10)])
 val_data = CSVData(batch_size=2048, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/train_'+str(i)+'.csv' for i in range(8,10)])
 
-net = DNN(Layers=[29, 32, 64, 32, 32, 16, 8, 4], device=device).Model
+net = DNN(Layers=[30, 32, 64, 32, 32, 16, 8, 4], device=device).Model
 optimizer = optim.Adam(net.parameters(), lr=1e-3)
 epochs=300
 
 losses, test_losses, val_losses, accuracies = train_model.train(train_data=VLQData, test_data = test_data, val_data = val_data, net = net, optimizer=optimizer, epochs=epochs, device=device)
 
 model_scripted = torch.jit.script(net)
-model_scripted.save('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/trained_models/[29, 32, 64, 32, 32, 16, 8, 4].pt')
+model_scripted.save('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/trained_models/[30, 32, 64, 32, 32, 16, 8, 4]1.pt')
 
 plt.plot(np.linspace(0,len(losses), len(losses)), losses, label = 'train loss')
 plt.yscale('log')
@@ -89,12 +89,12 @@ plt.yscale('log')
 plt.plot(np.linspace(0, len(losses), len(losses)), val_losses, label = 'validation loss')
 plt.yscale('log')
 plt.legend()
-plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/plots/LossFunctionPlots/[29, 32, 64, 32, 32, 16, 8, 4].png')
+plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/plots/LossFunctionPlots/[30, 32, 64, 32, 32, 16, 8, 4]1.png')
 plt.show()
 plt.close()
 
 plt.plot(np.linspace(0,len(losses),len(losses)), accuracies)
 plt.title('validation accuracy')
-plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/plots/RAE/[29, 32, 64, 64, 32, 16, 8, 4].png')
+plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/plots/RAE/[30, 32, 64, 64, 32, 16, 8, 4]1.png')
 plt.show()
 plt.close()

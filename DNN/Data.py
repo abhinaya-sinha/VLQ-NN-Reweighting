@@ -134,9 +134,20 @@ class CSVData(Data):
         """
         csv_file = pd.concat(pd.read_csv(file) for file in self.file_names)
         csv_file[self.features_to_rescale].divide(1000)
+        dummy_mode = pd.get_dummies(csv_file['mode'])
+        csv_file = pd.merge(
+            left=csv_file,
+            right=dummy_mode,
+            left_index=True,
+            right_index=True,
+        )
+        del dummy_mode
+        csv_file.rename(columns = {'-1':'mode-W', '0':'mode-H', '1':'mode-Z'}, inplace = True)
         Y = csv_file[self.labels_name].to_numpy()/(csv_file['weight'].to_numpy())
         try:
             self.features_name.remove('weight')
+            self.features_name.remove('mode')
+            self.features_name.append('mode-W', 'mode-H', 'mode-Z')
         except:
             pass
         X = csv_file[self.features_name].to_numpy()
