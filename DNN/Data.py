@@ -110,7 +110,10 @@ class CSVData(Data):
         self.features_name = features_name
         for m in ['mode-W', 'mode-H', 'mode-Z']:
             self.features_name.append(m)
-        self.features_name.remove('mode')
+        try:
+            self.features_name.remove('mode')
+        except:
+            pass
         self.labels_name = labels_name        
         self.spectators_name = spectators_name
         self.file_names = file_names 
