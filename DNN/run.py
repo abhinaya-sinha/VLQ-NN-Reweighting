@@ -16,10 +16,8 @@ else:
 	raise Exception("GPU not found")
 
 
-features = ['mode',
-'Msim',
+features = ['Msim',
 'Gsim',
-'weight',
 'pz_in1',
 'pid_in1', 
 'pz_in2',
@@ -45,7 +43,10 @@ features = ['mode',
 'e_out4',
 'pid_out4',
 'Mtarget',
-'Gtarget',]
+'Gtarget',
+'mode-W', 
+'mode-H', 
+'mode-Z',]
 label = 'f_rwt'
 features_to_rescale = ['Msim',
 'Gsim',
@@ -68,7 +69,7 @@ features_to_rescale = ['Msim',
 'pz_out4',
 'e_out4',
 'Mtarget',
-'Gtarget']
+'Gtarget',]
 VLQData = CSVData(batch_size=2048, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/train_'+str(i)+'.csv' for i in range(0,8)])
 test_data = CSVData(batch_size=1024, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/test_' + str(i) + '.csv' for i in range(0,10)])
 val_data = CSVData(batch_size=2048, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/train_'+str(i)+'.csv' for i in range(8,10)])

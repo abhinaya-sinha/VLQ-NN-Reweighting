@@ -108,12 +108,6 @@ class CSVData(Data):
         """Initializes and stores names of feature and label datasets"""
         super(CSVData, self).__init__(batch_size,cache,(spectators_name is not None))
         self.features_name = features_name
-        for m in ['mode-W', 'mode-H', 'mode-Z']:
-            self.features_name.append(m)
-        try:
-            self.features_name.remove('mode')
-        except:
-            pass
         self.labels_name = labels_name        
         self.spectators_name = spectators_name
         self.file_names = file_names 
