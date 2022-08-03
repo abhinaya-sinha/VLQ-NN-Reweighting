@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 class DNN(nn.Module):
-    def __init__(self, Layers=[25, 16], activation = nn.LeakyReLU(), X_mean = 0, X_std = 1, device = 'cpu'):
+    def __init__(self, Layers=[25, 16], activation = nn.LeakyReLU(), X_mean = 0, X_std = 1, device = 'cpu', dropout_p = None):
         super().__init__()
         self.Layers = Layers
         self.activation = activation
@@ -12,6 +12,8 @@ class DNN(nn.Module):
         self.Model = self.build_model().to(device)
         self.X_mean = X_mean 
         self.X_std = X_std
+        if dropout_p != None:
+            self.dropout = nn.Dropout(p=dropout_p)
 
     def build_model(self):
         net = nn.Sequential()
@@ -28,4 +30,7 @@ class DNN(nn.Module):
         return net 
     
     def forward(self, X):
-        return self.Model.forward(X)
+        X = self.Model.forward(X)
+        if self.dropout_p != None:
+            X = self.dropout(X)
+        return X
