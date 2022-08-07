@@ -68,7 +68,7 @@ VLQData = CSVData(batch_size=2048, features_name=features, labels_name=label, fe
 test_data = CSVData(batch_size=1024, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/test_' + str(i) + '.csv' for i in range(0,10)])
 val_data = CSVData(batch_size=2048, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/train_'+str(i)+'.csv' for i in range(8,10)])
 
-net = DNN(Layers=[25, 32, 64, 32, 32, 16, 8, 4], device=device, dropout_p = 0.2).Model
+net = DNN(Layers=[25, 32, 64, 32, 32, 16, 8, 4], device=device, dropout_p = 0.8).Model
 optimizer = optim.Adam(net.parameters(), lr=1e-3)
 epochs=300
 
