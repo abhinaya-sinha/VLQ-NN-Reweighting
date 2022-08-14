@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-class distribution_DNN(nn.model):
+class distribution_DNN(nn.Module):
     def __init__(self, Layers=[25, 16], activation = nn.LeakyReLU(), last_activation = nn.Softplus(), X_mean = 0, X_std = 1, device = 'cuda', prob_dist = 'gaussian'):
         super().__init__()
         self.Layers = Layers
