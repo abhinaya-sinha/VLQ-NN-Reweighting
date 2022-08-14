@@ -11,20 +11,20 @@ from Data import CSVData
 class train_model:
 
     def loss_fn(net, dist, y):
-        dist = dist.cpu().detach().numpy()
-        x = y.cpu().numpy()
+        dist = dist
+        x = y
         if net.prob_dist == 'gaussian':
-            L = -(-0.5*np.log(2*np.pi)-0.5*np.log(dist[:,1])-((x-dist[:,0])**2)/(2*dist[1]**2))
+            L = -(-0.5*torch.log(2*np.pi)-0.5*torch.log(dist[:,1])-((x-dist[:,0])**2)/(2*dist[1]**2))
         elif net.prob_dist == 'poisson':
-            L = -(-dist-np.log(np.math.factorial(x)+np.log(dist)*x))
+            L = -(-dist-torch.log(np.math.factorial(x)+torch.log(dist)*x))
         elif net.prob_dist == 'weibull':
-            L = -(-np.log(dist[:,0])-dist[:,0]*np.log(dist[:,1])-(x/dist[:,1])**dist[:,0]+(dist[:,0]-1)*np.log(x))
+            L = -(-torch.log(dist[:,0])-dist[:,0]*torch.log(dist[:,1])-(x/dist[:,1])**dist[:,0]+(dist[:,0]-1)*torch.log(x))
         elif net.prob_dist == 'continuous bernoulli':
-            n = np.log(dist/(1-dist))
-            L = -(n*x - n*np.log(np.exp(n)-1)+n*np.log(n))
+            n = torch.log(dist/(1-dist))
+            L = -(n*x - n*torch.log(torch.exp(n)-1)+n*torch.log(n))
         else:
             raise Exception('that probability distribution is not supported. the options are / '+(p + ' / ' for p in net.possible_prob_dists))
-        return torch.from_numpy(L)
+        return L
 
     def train(train_data, net, optimizer, test_data = None, val_data = None, epochs = 300, device='cuda'):
         losses =[]
