@@ -7,7 +7,7 @@ from torch import optim
 import Data
 from Data import CSVData
 from train_model import train_model
-from DNN import DNN
+from distribution_DNN import distribution_DNN
 
 if torch.cuda.is_available():
 	device = torch.device("cuda") 
@@ -68,7 +68,7 @@ VLQData = CSVData(batch_size=2048, features_name=features, labels_name=label, fe
 test_data = CSVData(batch_size=1024, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/test_' + str(i) + '.csv' for i in range(0,10)])
 val_data = CSVData(batch_size=2048, features_name=features, labels_name=label, features_to_rescale= features_to_rescale, file_names=['/projects/bbhj/asinha15/train_'+str(i)+'.csv' for i in range(8,10)])
 
-net = DNN(Layers=[25, 32, 64, 32, 32, 16, 8, 4], device=device, prob_dist = prob_dist)
+net = distribution_DNN(Layers=[25, 32, 64, 32, 32, 16, 8, 4], device=device, prob_dist = prob_dist)
 optimizer = optim.Adam(net.parameters(), lr=1e-3)
 epochs=300
 
