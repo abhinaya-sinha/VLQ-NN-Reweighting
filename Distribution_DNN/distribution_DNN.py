@@ -10,7 +10,6 @@ class distribution_DNN(nn.Module):
         self.activation = activation
         self.last_activation = last_activation
         self.device = device
-        self.Model = self.build_model().to(device)
         self.X_mean = X_mean 
         self.X_std = X_std
         self.possible_prob_dists = [ 'gaussian',
@@ -20,6 +19,7 @@ class distribution_DNN(nn.Module):
         self.prob_dist = prob_dist
         if prob_dist not in self.possible_prob_dists:
             raise Exception('that probability distribution is not supported. the options are / '+(p + ' / ' for p in self.possible_prob_dists))
+        self.Model = self.build_model().to(device)
 
         def build_model(self):
             net = nn.Sequential()
