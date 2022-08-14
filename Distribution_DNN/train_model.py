@@ -11,15 +11,16 @@ from Data import CSVData
 class train_model:
 
     def loss_fn(net, dist, y):
+        x = y.cpu()
         if net.prob_dist == 'gaussian':
-            L = -(-0.5*np.log(2*np.pi)-0.5*np.log(dist[:,1])-((y-dist[:,0])**2)/(2*dist[1]**2))
+            L = -(-0.5*np.log(2*np.pi)-0.5*np.log(dist[:,1])-((x-dist[:,0])**2)/(2*dist[1]**2))
         elif net.prob_dist == 'poisson':
-            L = -(-dist-np.log(np.math.factorial(y)+np.log(dist)*y))
+            L = -(-dist-np.log(np.math.factorial(x)+np.log(dist)*x))
         elif net.prob_dist == 'weibull':
-            L = -(-np.log(dist[:,0])-dist[:,0]*np.log(dist[:,1])-(y/dist[:,1])**dist[:,0]+(dist[:,0]-1)*np.log(y))
+            L = -(-np.log(dist[:,0])-dist[:,0]*np.log(dist[:,1])-(x/dist[:,1])**dist[:,0]+(dist[:,0]-1)*np.log(x))
         elif net.prob_dist == 'continuous bernoulli':
             n = np.log(dist/(1-dist))
-            L = -(n*y - n*np.log(np.exp(n)-1)+n*np.log(n))
+            L = -(n*x - n*np.log(np.exp(n)-1)+n*np.log(n))
         else:
             raise Exception('that probability distribution is not supported. the options are / '+(p + ' / ' for p in net.possible_prob_dists))
         return L
