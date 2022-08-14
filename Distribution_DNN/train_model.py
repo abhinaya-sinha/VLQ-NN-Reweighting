@@ -71,13 +71,13 @@ class train_model:
             if test_data != None:
                 with torch.no_grad():
                     test_out=model(test_inputs).to(device)
-                    test_losses.append((train_model.loss_fn(test_out, test_labels)).item())
+                    test_losses.append((train_model.loss_fn(net, test_out, test_labels)).item())
                     del test_out
             
             if val_data != None:
                 with torch.no_grad():
                     val_out=model(val_inputs).to(device)
-                    val_losses.append(train_model.loss_fn(val_out, val_labels).item())
+                    val_losses.append(train_model.loss_fn(net, val_out, val_labels).item())
                     del val_out
             
         print('Finished Training')
