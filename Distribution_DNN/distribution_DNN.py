@@ -21,30 +21,30 @@ class distribution_DNN(nn.Module):
             raise Exception('that probability distribution is not supported. the options are / '+(p + ' / ' for p in self.possible_prob_dists))
         self.Model = self.build_model().to(device)
 
-        def build_model(self):
-            net = nn.Sequential()
-            for ii in range(len(self.Layers)-2):
-                this_module = nn.Linear(self.Layers[ii], self.Layers[ii+1])
-                nn.init.xavier_normal_(this_module.weight)
-                net.add_module("Linear" + str(ii), this_module)
-                net.add_module("Activation" + str(ii), self.activation)
-            self.add_last_module(net)
-            return net 
-
-        def add_last_module(self, net):
-            if self.prob_dist == 'gaussian':
-                n_out = 2 #mean, standard deviation
-            elif self.prob_dist == 'poisson':
-                n_out = 1 #lambda
-            elif self.prob_dist == 'weibull':
-                n_out = 2 #k, lambda
-            elif self.prob_dist == 'continuous bernoulli':
-                n_out = 1 #lambda
-            else:
-                raise Exception('that probability distribution is not supported. the options are / '+(p + ' / ' for p in self.possible_prob_dists))
-            this_module = nn.Linear(self.Layers[-2], n_out, True)
+    def build_model(self):
+        net = nn.Sequential()
+        for ii in range(len(self.Layers)-2):
+            this_module = nn.Linear(self.Layers[ii], self.Layers[ii+1])
             nn.init.xavier_normal_(this_module.weight)
-            net.add_module("Linear_last", this_module)
-            last_activation = self.last_activation
-            if last_activation != None:
-                net.add_module("Activation_last", last_activation)
+            net.add_module("Linear" + str(ii), this_module)
+            net.add_module("Activation" + str(ii), self.activation)
+        self.add_last_module(net)
+        return net 
+
+    def add_last_module(self, net):
+        if self.prob_dist == 'gaussian':
+            n_out = 2 #mean, standard deviation
+        elif self.prob_dist == 'poisson':
+            n_out = 1 #lambda
+        elif self.prob_dist == 'weibull':
+            n_out = 2 #k, lambda
+        elif self.prob_dist == 'continuous bernoulli':
+            n_out = 1 #lambda
+        else:
+            raise Exception('that probability distribution is not supported. the options are / '+(p + ' / ' for p in self.possible_prob_dists))
+        this_module = nn.Linear(self.Layers[-2], n_out, True)
+        nn.init.xavier_normal_(this_module.weight)
+        net.add_module("Linear_last", this_module)
+        last_activation = self.last_activation
+        if last_activation != None:
+            net.add_module("Activation_last", last_activation)
