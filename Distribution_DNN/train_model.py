@@ -11,8 +11,8 @@ from Data import CSVData
 class train_model:
 
     def loss_fn(net, dist, y):
-        dist = dist.to('cpu')
-        x = y.cpu()
+        dist = dist.cpu().detach().numpy()
+        x = y.cpu().numpy()
         if net.prob_dist == 'gaussian':
             L = -(-0.5*np.log(2*np.pi)-0.5*np.log(dist[:,1])-((x-dist[:,0])**2)/(2*dist[1]**2))
         elif net.prob_dist == 'poisson':
