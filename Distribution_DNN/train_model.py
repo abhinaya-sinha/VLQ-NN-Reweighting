@@ -61,6 +61,8 @@ class train_model:
                 optimizer.step()
                 del outputs, inputs, labels
                 epoch_loss.append(loss.item())
+                if loss.isnan():
+                    raise Exception('nan encountered in loss')
                 del loss
                     
             loss = np.mean(epoch_loss)
