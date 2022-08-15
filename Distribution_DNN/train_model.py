@@ -21,7 +21,7 @@ class train_model:
             L = torch.mean(-(-torch.log(dist[:,0])-dist[:,0]*torch.log(dist[:,1])-(x/dist[:,1])**dist[:,0]+(dist[:,0]-1)*torch.log(x)))
         elif net.prob_dist == 'continuous bernoulli':
             n = torch.log(dist/(1-dist))
-            L = torch.mean(-(n*x - n*torch.log(torch.exp(n)-1)+n*torch.log(n)))
+            L = torch.mean(-(n*x - n*torch.log(torch.exp(n)-1)+n*torch.log(n)), keepdim=True)
         else:
             raise Exception('that probability distribution is not supported. the options are / '+(p + ' / ' for p in net.possible_prob_dists))
         return L

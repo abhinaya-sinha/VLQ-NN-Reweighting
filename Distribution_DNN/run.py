@@ -75,7 +75,7 @@ epochs=300
 losses, test_losses, val_losses = train_model.train(train_data=VLQData, test_data = test_data, val_data = val_data, net = net, optimizer=optimizer, epochs=epochs, device=device)
 
 model_scripted = torch.jit.script(net.Model)
-model_scripted.save('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/trained_models/[25, 32, 64, 32, 32, 16, 8, 4]_dist_weibull.pt')
+model_scripted.save('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/Distributive-Learning/[25, 32, 64, 32, 32, 16, 8, 4]_dist_weibull.pt')
 
 plt.plot(np.linspace(0,len(losses), len(losses)), losses, label = 'train loss')
 plt.yscale('log')
@@ -84,6 +84,6 @@ plt.yscale('log')
 plt.plot(np.linspace(0, len(losses), len(losses)), val_losses, label = 'validation loss')
 plt.yscale('log')
 plt.legend()
-plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/main/plots/LossFunctionPlots/[25, 32, 64, 32, 32, 16, 8, 4]_dist_weibull.png')
+plt.savefig('/projects/bbhj/asinha15/VLQ-NN-Reweighting/Distributive-Learning/plots/LossFunctionPlots/[25, 32, 64, 32, 32, 16, 8, 4]_dist_weibull.png')
 plt.show()
 plt.close()
