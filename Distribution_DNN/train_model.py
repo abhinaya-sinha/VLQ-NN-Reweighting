@@ -14,11 +14,11 @@ class train_model:
         dist = dist
         x = y
         if net.prob_dist == 'gaussian':
-            L = torch.mean(-(-0.5*torch.log(2*np.pi)-0.5*torch.log(dist[:,1])-((x-dist[:,0])**2)/(2*dist[1]**2)))
+            L = torch.mean(-(-0.5*torch.log(2*np.pi)-0.5*torch.log(dist[:,1])-((x-dist[:,0])**2)/(2*dist[1]**2)), keepdim=True)
         elif net.prob_dist == 'poisson':
-            L = torch.mean(-(-dist-torch.log(np.math.factorial(x)+torch.log(dist)*x)))
+            L = torch.mean(-(-dist-torch.log(np.math.factorial(x)+torch.log(dist)*x)), keepdim=True)
         elif net.prob_dist == 'weibull':
-            L = torch.mean(-(-torch.log(dist[:,0])-dist[:,0]*torch.log(dist[:,1])-(x/dist[:,1])**dist[:,0]+(dist[:,0]-1)*torch.log(x)))
+            L = torch.mean(-(-torch.log(dist[:,0])-dist[:,0]*torch.log(dist[:,1])-(x/dist[:,1])**dist[:,0]+(dist[:,0]-1)*torch.log(x)), keepdim=True)
         elif net.prob_dist == 'continuous bernoulli':
             n = torch.log(dist/(1-dist))
             L = torch.mean(-(n*x - n*torch.log(torch.exp(n)-1)+n*torch.log(n)), keepdim=True)
