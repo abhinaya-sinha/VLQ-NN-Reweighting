@@ -117,19 +117,11 @@ class CSVData(Data):
         """
         csv_file = pd.read_csv(in_file_name)
         csv_file[self.features_to_rescale].divide(1000)
-        dummy_mode = pd.get_dummies(csv_file['mode'], dtype=float)
-        csv_file = pd.merge(
-            left=csv_file,
-            right=dummy_mode,
-            left_index=True,
-            right_index=True,
-        )
-        csv_file.rename(columns = {-1:'mode-W', 0:'mode-H', 1:'mode-Z'}, inplace = True)
         Y = csv_file[self.labels_name].to_numpy()/(csv_file['weight'].to_numpy())
         X = csv_file[self.features_name].to_numpy()
         if self.spectators_name is not None:
             Z = csv_file[self.spectators_name].to_numpy()
-        del csv_file, dummy_mode
+        del csv_file
         if self.spectators_name is not None:
             return X,Y, Z
         else:
@@ -139,19 +131,11 @@ class CSVData(Data):
         """
         csv_file = pd.concat(pd.read_csv(file) for file in self.file_names)
         csv_file[self.features_to_rescale].divide(1000)
-        dummy_mode = pd.get_dummies(csv_file['mode'], dtype=float)
-        csv_file = pd.merge(
-            left=csv_file,
-            right=dummy_mode,
-            left_index=True,
-            right_index=True,
-        )
-        csv_file.rename(columns = {-1:'mode-W', 0:'mode-H', 1:'mode-Z'}, inplace = True)
         Y = csv_file[self.labels_name].to_numpy()/(csv_file['weight'].to_numpy())
         X = csv_file[self.features_name].to_numpy()
         if self.spectators_name is not None:
             Z = csv_file[self.spectators_name].to_numpy()
-        del csv_file, dummy_mode
+        del csv_fil
         if self.spectators_name is not None:
             return X,Y, Z
         else:
