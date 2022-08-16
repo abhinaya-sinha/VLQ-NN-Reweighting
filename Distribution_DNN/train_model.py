@@ -28,7 +28,6 @@ class train_model:
             L = torch.mean(-(n*x - n*torch.log(torch.exp(n)-1)+n*torch.log(n)))
         else:
             raise Exception('that probability distribution is not supported. the options are / '+(p + ' / ' for p in net.possible_prob_dists))
-        print(L)
         return L
 
     def train(train_data, net, optimizer, test_data = None, val_data = None, epochs = 300, device='cuda'):
