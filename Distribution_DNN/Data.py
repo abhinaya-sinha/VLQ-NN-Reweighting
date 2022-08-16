@@ -135,7 +135,7 @@ class CSVData(Data):
         X = csv_file[self.features_name].to_numpy()
         if self.spectators_name is not None:
             Z = csv_file[self.spectators_name].to_numpy()
-        del csv_fil
+        del csv_file
         if self.spectators_name is not None:
             return X,Y, Z
         else:
