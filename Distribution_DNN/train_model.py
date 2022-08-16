@@ -18,7 +18,10 @@ class train_model:
         elif net.prob_dist == 'weibull':
             L = torch.tensor(0)
             for i, x in enumerate(y):
-                L = L.clone() - (-torch.log(dist[i,0])-dist[i,0]*torch.log(dist[i,1])-(x/dist[i,1])**dist[i,0]+(dist[i,0]-1)*torch.log(x))
+                div_part = (x/dist[i,1])
+                if div_part.isnan().item():
+                    div_part =  torch.tensor(float('inf'))
+                L = L.clone() - (-torch.log(dist[i,0])-dist[i,0]*torch.log(dist[i,1])-div_part**dist[i,0]+(dist[i,0]-1)*torch.log(x))
         elif net.prob_dist == 'continuous bernoulli':
             n = torch.log(dist/(1-dist))
             L = torch.mean(-(n*x - n*torch.log(torch.exp(n)-1)+n*torch.log(n)))
