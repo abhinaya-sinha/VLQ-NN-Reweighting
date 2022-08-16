@@ -35,7 +35,7 @@ class train_model:
         test_losses = []
         val_losses = []
         model = net.Model
-        
+        torch.autograd.set_detect_anomaly(True)
         if test_data != None:
             X_test, Y_test = test_data.load_data_many()
             test_inputs = torch.Tensor(np.array(X_test)).to(device)
