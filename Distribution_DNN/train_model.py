@@ -22,7 +22,7 @@ class train_model:
                     dist[i,1] = 1e-10
                 if dist[i,0] < 1e-20:
                     dist[i,0] = 1e-10
-                L = L -(-torch.log(dist[i,0])-dist[i,0]*torch.log(dist[i,1])-(x/dist[i,1])**dist[i,0]+(dist[i,0]-1)*torch.log(x))
+                L = L.clone() - (-torch.log(dist[i,0])-dist[i,0]*torch.log(dist[i,1])-(x/dist[i,1])**dist[i,0]+(dist[i,0]-1)*torch.log(x))
         elif net.prob_dist == 'continuous bernoulli':
             n = torch.log(dist/(1-dist))
             L = torch.mean(-(n*x - n*torch.log(torch.exp(n)-1)+n*torch.log(n)))
