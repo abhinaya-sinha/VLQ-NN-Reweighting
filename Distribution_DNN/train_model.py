@@ -40,13 +40,13 @@ class train_model:
         if test_data != None:
             X_test, Y_test = test_data.load_data_many()
             test_inputs = torch.Tensor(np.array(X_test)).to(device)
-            test_labels = torch.Tensor(np.array(np.log(Y_test)))
+            test_labels = torch.Tensor(Y_test)
             del X_test, Y_test
         
         if val_data != None:
             X_val, Y_val = val_data.load_data_many()
             val_inputs = torch.Tensor(np.array(X_val)).to(device)
-            val_labels = torch.Tensor(np.array(np.log(Y_val)))
+            val_labels = torch.Tensor(Y_val)
             del X_val, Y_val
 
         for epoch in range(epochs):
@@ -56,7 +56,7 @@ class train_model:
             for X, Y in train_data.generate_data():
 
                 inputs = torch.Tensor(np.array(X)).to(device)
-                labels = torch.Tensor(np.log(np.array(Y)))
+                labels = torch.Tensor(Y)
                 del X, Y
                 
                 outputs =model(inputs)
