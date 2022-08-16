@@ -11,13 +11,14 @@ from Data import CSVData
 class train_model:
 
     def loss_fn(net, dist, y):
+        y_cpu = y.cpu()
         if net.prob_dist == 'gaussian':
             L = torch.mean(-(-0.5*torch.log(2*np.pi)-0.5*torch.log(dist[:,1])-((x-dist[:,0])**2)/(2*dist[1]**2)))
         elif net.prob_dist == 'poisson':
             L = torch.mean(-(-dist-torch.log(np.math.factorial(x)+torch.log(dist)*x)))
         elif net.prob_dist == 'weibull':
             L = 0
-            for i, x in enumerate(y):
+            for i, x in enumerate(y_cpu):
                 L += -(-np.log(dist[i,0])-dist[i,0]*np.log(dist[i,1])-(x/dist[i,1])**dist[i,0]+(dist[i,0]-1)*np.log(x))
             L = torch.tensor(L)
         elif net.prob_dist == 'continuous bernoulli':
