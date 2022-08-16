@@ -18,6 +18,7 @@ class train_model:
         elif net.prob_dist == 'weibull':
             L = torch.tensor(0)
             for i, x in enumerate(y):
+                print(dist[i])
                 L = L -(-torch.log(dist[i,0])-dist[i,0]*torch.log(dist[i,1])-(x/dist[i,1])**dist[i,0]+(dist[i,0]-1)*torch.log(x))
         elif net.prob_dist == 'continuous bernoulli':
             n = torch.log(dist/(1-dist))
