@@ -16,10 +16,9 @@ class train_model:
         elif net.prob_dist == 'poisson':
             L = torch.mean(-(-dist-torch.log(np.math.factorial(x)+torch.log(dist)*x)))
         elif net.prob_dist == 'weibull':
-            L = 0
+            L = torch.tensor(0)
             for i, x in enumerate(y):
-                L += -(-np.log(dist[i,0])-dist[i,0]*np.log(dist[i,1])-(x/dist[i,1])**dist[i,0]+(dist[i,0]-1)*np.log(x))
-            L = torch.tensor(L)
+                L = L -(-torch.log(dist[i,0])-dist[i,0]*torch.log(dist[i,1])-(x/dist[i,1])**dist[i,0]+(dist[i,0]-1)*torch.log(x))
         elif net.prob_dist == 'continuous bernoulli':
             n = torch.log(dist/(1-dist))
             L = torch.mean(-(n*x - n*torch.log(torch.exp(n)-1)+n*torch.log(n)))
