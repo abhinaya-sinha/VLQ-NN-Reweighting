@@ -17,7 +17,7 @@ class train_model:
             L = torch.mean(-(-dist-torch.log(np.math.factorial(x)+torch.log(dist)*x)))
         elif net.prob_dist == 'weibull':
             L = 0
-            for i, x in enumerate(y_cpu):
+            for i, x in enumerate(y):
                 L += -(-np.log(dist[i,0])-dist[i,0]*np.log(dist[i,1])-(x/dist[i,1])**dist[i,0]+(dist[i,0]-1)*np.log(x))
             L = torch.tensor(L)
         elif net.prob_dist == 'continuous bernoulli':
