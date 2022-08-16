@@ -11,6 +11,7 @@ from Data import CSVData
 class train_model:
 
     def loss_fn(net, dist, y):
+        dist.to('cpu')
         y_cpu = y.cpu()
         if net.prob_dist == 'gaussian':
             L = torch.mean(-(-0.5*torch.log(2*np.pi)-0.5*torch.log(dist[:,1])-((x-dist[:,0])**2)/(2*dist[1]**2)))
