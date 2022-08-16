@@ -11,8 +11,6 @@ from Data import CSVData
 class train_model:
 
     def loss_fn(net, dist, y):
-        dist = dist.to('cpu')
-        y_cpu = y.to('cpu')
         if net.prob_dist == 'gaussian':
             L = torch.mean(-(-0.5*torch.log(2*np.pi)-0.5*torch.log(dist[:,1])-((x-dist[:,0])**2)/(2*dist[1]**2)))
         elif net.prob_dist == 'poisson':
@@ -39,13 +37,13 @@ class train_model:
         if test_data != None:
             X_test, Y_test = test_data.load_data_many()
             test_inputs = torch.Tensor(np.array(X_test)).to(device)
-            test_labels = torch.Tensor(np.array(np.log(Y_test))).to(device)
+            test_labels = torch.Tensor(np.array(np.log(Y_test)))
             del X_test, Y_test
         
         if val_data != None:
             X_val, Y_val = val_data.load_data_many()
             val_inputs = torch.Tensor(np.array(X_val)).to(device)
-            val_labels = torch.Tensor(np.array(np.log(Y_val))).to(device)
+            val_labels = torch.Tensor(np.array(np.log(Y_val)))
             del X_val, Y_val
 
         for epoch in range(epochs):
@@ -55,12 +53,12 @@ class train_model:
             for X, Y in train_data.generate_data():
 
                 inputs = torch.Tensor(np.array(X)).to(device)
-                labels = torch.Tensor(np.log(np.array(Y))).to(device)
+                labels = torch.Tensor(np.log(np.array(Y)))
                 del X, Y
                 
                 outputs =model(inputs)
                 optimizer.zero_grad()
-                loss = train_model.loss_fn(net, outputs, labels)
+                loss = train_model.loss_fn(net, outputs.to('cpu'), labels)
                 loss.backward()
                 optimizer.step()
                 del outputs, inputs, labels
