@@ -21,13 +21,19 @@ class train_model:
                 div_part = (x/dist[i,1])
                 if div_part.isnan().item():
                     div_part =  torch.tensor(float('inf'))
-                L = L.clone() - (-torch.log(dist[i,0])-dist[i,0]*torch.log(dist[i,1])-div_part**dist[i,0]+(dist[i,0]-1)*torch.log(x))
+                log_parts = dist
+                if log_parts[i, 0] < 1e-20:
+                    log_parts[i,0] == 1e-20
+                if log_parts[i, 1] < 1e-20:
+                    log_parts[i,1] == 1e-20
+                if x < 1e-20:
+                    x == 1e-20
+                L = L.clone() - (-torch.log(log_parts[i,0])-dist[i,0]*torch.log(log_parts[i,1])-div_part**dist[i,0]+(dist[i,0]-1)*torch.log(x))
         elif net.prob_dist == 'continuous bernoulli':
             n = torch.log(dist/(1-dist))
             L = torch.mean(-(n*x - n*torch.log(torch.exp(n)-1)+n*torch.log(n)))
         else:
             raise Exception('that probability distribution is not supported. the options are / '+(p + ' / ' for p in net.possible_prob_dists))
-        print(L.grad_fn)
         return L
 
     def train(train_data, net, optimizer, test_data = None, val_data = None, epochs = 300, device='cuda'):
